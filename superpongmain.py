@@ -4,11 +4,14 @@ import pygame , sys
 pygame.init()
 pygame.font.init()
 screen = pygame.display.set_mode((1280, 720))
+pygame.display.set_caption('SUPER PONG')
 clock = pygame.time.Clock()
 running = True
-##UNI_VAR-------------------------------------------------
+icon_name = pygame.image.load('icon_name.jfif').convert()   #
+pygame.display.set_icon(icon_name)  #----> criar icône 
+##UNIVERSAIS_VAR-------------------------------------------------
 in_menu = True
-menu_font = pygame.font.SysFont('Comic Sans MS', 70)
+menu_font = pygame.font.SysFont('Comic Sans MS', 70)    #----->fazer função cria texto
 texto_menu = menu_font.render('Press Space', True, (90, 100, 240))
 background = pygame.image.load('background.jpg').convert()
 background = pygame.transform.smoothscale(background, screen.get_size())
@@ -48,7 +51,7 @@ while running:
         if event.type == pygame.QUIT:
             running = False
         
-        if event.type == pygame.KEYDOWN and stage(estagio) == "menu":  #teste apertar tecla
+        if event.type == pygame.KEYDOWN and stage(estagio) == "menu":  #usar pygamr.key.get_pressed()
             if event.key == pygame.K_SPACE:    
                 estagio = next(stages)
                 print("teste_space")
