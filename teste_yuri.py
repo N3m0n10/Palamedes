@@ -5,13 +5,15 @@ from ball import ball
 
 # pygame setup
 pygame.init()
-screen = pygame.display.set_mode((1280, 720))
+WIDTH, HEIGHT = 1280,720 #largura e altura
+screen = pygame.display.set_mode((WIDTH, HEIGHT))
+#fps
 clock = pygame.time.Clock()
-running = True
 dt = 0
 
 ball1 = ball(screen,'red',40)
 
+running = True
 while running:
     # poll for events
     # pygame.QUIT event means the user clicked X to close your window
@@ -23,7 +25,7 @@ while running:
     screen.fill("black")
 
     #Bola
-    ball1.atualize(dt)
+    ball1.atualize(dt,(WIDTH, HEIGHT))
    
     # flip() the display to put your work on screen
     pygame.display.flip()
