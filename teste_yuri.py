@@ -1,5 +1,7 @@
 # Example file showing a circle moving on screen
 import pygame
+from ball import ball
+
 
 # pygame setup
 pygame.init()
@@ -8,7 +10,7 @@ clock = pygame.time.Clock()
 running = True
 dt = 0
 
-player_pos = pygame.Vector2(screen.get_width() / 2, screen.get_height() / 2)
+ball1 = ball(screen,'red',40)
 
 while running:
     # poll for events
@@ -18,20 +20,11 @@ while running:
             running = False
 
     # fill the screen with a color to wipe away anything from last frame
-    screen.fill("purple")
+    screen.fill("black")
 
-    pygame.draw.circle(screen, "red", player_pos, 40)
-
-    keys = pygame.key.get_pressed()
-    if keys[pygame.K_w]:
-        player_pos.y -= 300 * dt
-    if keys[pygame.K_s]:
-        player_pos.y += 300 * dt
-    if keys[pygame.K_a]:
-        player_pos.x -= 300 * dt
-    if keys[pygame.K_d]:
-        player_pos.x += 300 * dt
-
+    #Bola
+    ball1.atualize(dt)
+   
     # flip() the display to put your work on screen
     pygame.display.flip()
 
