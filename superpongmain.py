@@ -22,7 +22,7 @@ def stage(estagio):
             return "menu"    #------->mudar nomes
 
         case 1 :
-            return "fases"
+            return "fase"
             
 
         case 3 :
@@ -60,6 +60,10 @@ while running:
     ##CHAMADAS---------------------------------------------
     if stage(estagio) == "menu": #-----------> mudar
         menu_screen()
+
+    if stage(estagio) == "fase":
+        with open("teste_yuri.py", "r") as file:
+            exec(file.read(), {"__name__": ""})
 
     # flip() the display to put your work on screen
     pygame.display.flip()
