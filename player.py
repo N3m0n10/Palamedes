@@ -17,10 +17,10 @@ class player():
         keys = pygame.key.get_pressed()
 
         #otimizar com o 'if key_down'
-        if keys[pygame.K_UP]:
-            self.player_pos.y -= 300 *dt
-        if keys[pygame.K_DOWN]:
-            self.player_pos.y += 300 *dt
+        #if keys[pygame.K_UP]:
+        #    self.player_pos.y -= 300 *dt
+        #if keys[pygame.K_DOWN]:
+        #    self.player_pos.y += 300 *dt
         if keys[pygame.K_LEFT]:
             self.player_pos.x -= 300 *dt
         if keys[pygame.K_RIGHT]:
@@ -34,10 +34,10 @@ class player():
             self.player_pos.x = tela[0] - self.radius
 
 
-        if self.player_pos.y <= 0 + self.radius:
-            self.player_pos.y = 0 + self.radius
-        if self.player_pos.y >= tela[1] - self.radius:
-            self.player_pos.y = tela[1] - self.radius
+        #if self.player_pos.y <= 0 + self.radius:
+        #    self.player_pos.y = 0 + self.radius
+        #if self.player_pos.y >= tela[1] - self.radius:
+        #    self.player_pos.y = tela[1] - self.radius
 
 
 

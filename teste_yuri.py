@@ -12,8 +12,8 @@ clock = pygame.time.Clock()
 dt = 0
 
 ball1 = ball(screen,'red',40)
-player1 = player(screen, 'blue', 50, 600)
-player2 = player(screen, 'orange', 50, 120)
+player1 = player(screen, 'blue', 50, 280)
+player2 = player(screen, 'orange', 50, 1000)
 
 
 running = True
@@ -28,11 +28,7 @@ while running:
     screen.fill("black")
 
     #Bola
-    ball1.atualize(dt,(WIDTH, HEIGHT))
-    player1.atualize(dt,(WIDTH, HEIGHT))
-    player2.atualize(dt,(WIDTH, HEIGHT))
-   
-    # flip() the display to put your work on screen
+    ball1.atualize(dt,(WIDTH, HEIGHT)) 
     pygame.display.flip()
 
     # limits FPS to 60
