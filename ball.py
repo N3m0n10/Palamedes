@@ -9,8 +9,8 @@ class ball():
         self.color = color
         self.radius = radius
 
-        self.ball_vel_x = random.randint(3,20)
-        self.ball_vel_y = random.randint(3,20) 
+        self.ball_vel_x = random.randint(6,20)
+        self.ball_vel_y = random.randint(6,20) 
 
         #color
         self.hue = 0
@@ -26,7 +26,7 @@ class ball():
         self.player_pos.y += self.ball_vel_y
         
         keys = pygame.key.get_pressed()
-        #otimizar com o 'if key_down'
+        #otimizar com 'if key_down'
         if keys[pygame.K_w]:
             self.player_pos.y -= 300 *dt
         if keys[pygame.K_s]:
