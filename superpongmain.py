@@ -27,11 +27,11 @@ def stage(estagio):
         case 1 :
             return "fase"
             
-
         case 3 :
             #return pontuacao
             pass
-        case False :
+
+        case False :  #------> provisório
             pass
  
 
