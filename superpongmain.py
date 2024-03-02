@@ -65,7 +65,7 @@ while running:
         menu_screen()
 
     if stage(estagio) == "fase":
-        with open("teste_yuri.py", "r") as file:
+        with open("teste_nemo.py", "r") as file:  
             exec(file.read(), {"__name__": ""})
 
     # flip() the display to put your work on screen
