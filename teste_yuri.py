@@ -1,7 +1,7 @@
 # Example file showing a circle moving on screen
 import pygame
 from ball import ball
-
+import colorsys
 
 # pygame setup
 pygame.init()
