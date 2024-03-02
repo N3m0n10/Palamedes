@@ -11,6 +11,7 @@ screen = pygame.display.set_mode((WIDTH, HEIGHT))
 clock = pygame.time.Clock()
 dt = 0
 
+
 ball1 = ball(screen,'red',40)
 
 running = True

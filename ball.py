@@ -40,6 +40,7 @@ class ball():
             color2 = (color[0]*255,color[1]*255,color[2]*255)
             self.color = color2
             
+            
 
         if self.player_pos.x <= 0:
             self.player_pos.x = 0 + self.radius
