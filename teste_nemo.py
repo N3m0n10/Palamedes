@@ -12,19 +12,22 @@ clock = pygame.time.Clock()
 dt = 0
 
 ball1 = ball(screen,'red',40)
-player1 = player(screen, 'blue' , 20, 70 , 180)
-player2 = player(screen, 'orange' , 20, 70 , 1100)
+player1 = player(screen, 'blue' , 20, 70 , 180,0)
+player2 = player(screen, 'orange' , 20, 70 , 1100,1)
 
 running = True
 while running:
-    # poll for events
-    # pygame.QUIT event means the user clicked X to close your window
+    #SAI COM O "X" DE FECHAR A JANELA
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
 
     # fill the screen with a color to wipe away anything from last frame
     screen.fill("black")
+
+    #colisão
+    #if ball1.player_pos.x == (player1.player_pos.x or player2.player_pos.x) + 50:
+    #    if ball1.player_pos.y >= (player1.player_pos.y or player2.player_pos.y) + 75 and  
 
     #Bola
     ball1.atualize(dt,(WIDTH, HEIGHT))

@@ -26,17 +26,7 @@ class ball():
         self.player_pos.x += self.ball_vel_x
         self.player_pos.y += self.ball_vel_y
         
-        
         keys = pygame.key.get_pressed()
-        #otimizar com 'if key_down'
-        if keys[pygame.K_w]:
-            self.player_pos.y -= 300 *dt
-        if keys[pygame.K_s]:
-            self.player_pos.y += 300 *dt
-        if keys[pygame.K_a]:
-            self.player_pos.x -= 300 *dt
-        if keys[pygame.K_d]:
-            self.player_pos.x += 300 *dt
 
         #change color
         if keys[pygame.K_o]:
