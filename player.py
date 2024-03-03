@@ -15,6 +15,7 @@ class player():
 
         self.player_pos = pygame.Vector2(posit_x ,screen.get_height() / 2)
 
+
     def atualize(self,dt, tela:tuple):
         keys = pygame.key.get_pressed()
 
@@ -29,18 +30,18 @@ class player():
             self.player_pos.x += 300 *dt
 
         
-   
+        #BORDAS---------------------------------------
         if self.player_pos.x <= 0 + self.size_x:
             self.player_pos.x = 0 + self.size_x
         if self.player_pos.x >= tela[0] - self.size_x:
             self.player_pos.x = tela[0] - self.size_x
 
 
-        if self.player_pos.y <= 0 + self.size_y:
-            self.player_pos.y = 0 + self.size_y
+        if self.player_pos.y <= 0 :
+            self.player_pos.y = 0 
         if self.player_pos.y >= tela[1] - self.size_y:
             self.player_pos.y = tela[1] - self.size_y
 
 
 
-        pygame.draw.rect(self.screen,self.color , [self.posit_x, 360, self.size_x, self.size_y])
+        pygame.draw.rect(self.screen,self.color , [self.player_pos.x, self.player_pos.y , self.size_x, self.size_y])
