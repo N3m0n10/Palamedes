@@ -54,7 +54,7 @@ while running:
         if event.type == pygame.KEYDOWN and stage(estagio) == "menu":  #usar pygamr.key.get_pressed()
             if event.key == pygame.K_SPACE:    
                 estagio = next(stages)
-                print("teste_space")
+
 
     # fill the screen with a color to wipe away anything from last frame
     screen.fill("White")
