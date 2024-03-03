@@ -12,8 +12,8 @@ clock = pygame.time.Clock()
 dt = 0
 
 ball1 = ball(screen,'red',40)
-player1 = player(screen, 'blue', 50, 180)
-player2 = player(screen, 'orange', 50, 1100)
+player1 = player(screen, 'blue' , 20, 70 , 180)
+player2 = player(screen, 'orange' , 20, 70 , 1100)
 
 running = True
 while running:
