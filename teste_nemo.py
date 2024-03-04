@@ -42,10 +42,10 @@ while running:
         
 
     #Bola
-    ball1.atualize(dt,(WIDTH, HEIGHT),colide)
-    bot.atualize(dt,(WIDTH, HEIGHT),0,ball1.player_pos.y , ball1.ball_vel_y)
-    player1.atualize(dt,(WIDTH, HEIGHT),1,ball1.player_pos.y , ball1.ball_vel_y)
-    #player2.atualize(dt,(WIDTH, HEIGHT),2,ball1.player_pos.y , ball1.ball_vel_y)
+    ball1.atualize(dt, (WIDTH, HEIGHT) , colide)
+    bot.atualize(dt, (WIDTH, HEIGHT) , 0 , ball1.player_pos.y )
+    player1.atualize(dt, (WIDTH, HEIGHT) , 1 , ball1.player_pos.y )
+    #player2.atualize(dt, (WIDTH, HEIGHT) , 2 , ball1.player_pos.y )
    
     # flip() the display to put your work on screen
     pygame.display.flip()

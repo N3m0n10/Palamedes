@@ -11,33 +11,31 @@ class player():
         self.size_y = size_y
         self.posit_x = posit_x
         self.player_num = player_num
-        self.player_speed = 0
         self.movement_keys = [[pygame.K_w,pygame.K_s,pygame.K_a,pygame.K_d], \
                               [pygame.K_UP,pygame.K_DOWN,pygame.K_LEFT,pygame.K_RIGHT]]
         self.player_pos = pygame.Vector2(posit_x ,screen.get_height() / 2)
         #_______________________________________________________________________________
     #FUNÇÂO DE MOVIMENTO----> MODIFICAR PARA ADEQUAR O BOT
-    def move(self, movement_keys ,  keys, dt, player_num, ball_pos_y , ball_speed_y): 
+    def move(self, movement_keys ,  keys, dt, player_num, ball_pos_y ): 
         if player_num == 0:
-            if self.player_pos.y != ball_pos_y:
-                self.player_speed = ball_speed_y
+            if self.player_pos.y > ball_pos_y:
+                self.player_pos.y -= 900 *dt
+            elif self.player_pos.y < ball_pos_y:
+                self.player_pos.y += 900 *dt
         else:
             if keys[movement_keys[0]]:
-                self.player_pos.y -= 300 *dt
+                self.player_pos.y -= 600 *dt
             if keys[movement_keys[1]]:
-                self.player_pos.y += 300 *dt
+                self.player_pos.y += 600 *dt
             if keys[movement_keys[2]]:
-                self.player_pos.x -= 300 *dt
+                self.player_pos.x -= 600 *dt
             if keys[movement_keys[3]]:
-                self.player_pos.x += 300 *dt
+                self.player_pos.x += 600 *dt
     
-    def atualize(self,dt, tela:tuple,player_num ,ball_pos_y , ball_speed_y):
+    def atualize(self,dt, tela:tuple,player_num ,ball_pos_y ):
         keys = pygame.key.get_pressed()
 
-        self.move( self.movement_keys[self.player_num], keys, dt, player_num, ball_pos_y , ball_speed_y)
-        
-        #MOVIMENTO BOT
-        self.player_pos.y += self.player_speed
+        self.move( self.movement_keys[self.player_num], keys, dt, player_num, ball_pos_y )
         
         #BORDAS_X
         if self.player_pos.x <= 0 :
