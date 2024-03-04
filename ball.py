@@ -20,7 +20,7 @@ class ball():
         self.player_pos = pygame.Vector2(screen.get_width() / 2, screen.get_height() / 2)
    
     
-    def atualize(self,dt, tela:tuple):
+    def atualize(self,dt, tela:tuple, colide):
         
         #mobilidade
         self.player_pos.x += self.ball_vel_x
@@ -38,7 +38,11 @@ class ball():
             self.color = color2    
         #end_color
             
-
+        #PLAYER COLIDE
+        if colide == 1:
+            self.ball_vel_x = self.ball_vel_x * -1
+            colide = 0
+        #BORDA COLIDE
         if self.player_pos.x <= 0:
             self.player_pos.x = 0 + self.radius
             self.ball_vel_x =   self.ball_vel_x * -1
