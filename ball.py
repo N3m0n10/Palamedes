@@ -2,9 +2,12 @@ import pygame
 import math
 import colorsys
 import random
-class ball():
+class ball(pygame.sprite.Sprite):
 
     def __init__(self,screen, color, radius):
+
+        pygame.sprite.Sprite.__init__(self)
+
         self.screen = screen
         self.color = color
         self.radius = radius
@@ -18,6 +21,8 @@ class ball():
 
         self.player_pos = pygame.Vector2(screen.get_width() / 2, screen.get_height() / 2)
    
+        self.rect = pygame.Rect(0,0,radius,radius)
+
     
     def atualize(self,dt, tela:tuple):
         
@@ -26,17 +31,10 @@ class ball():
         self.player_pos.y += self.ball_vel_y
         
         #por enquanto só ta sendo utilizado agora para alterar a cor da bola com um botão
-        keys = pygame.key.get_pressed()
+        #keys = pygame.key.get_pressed()
         
         #change color
-        if keys[pygame.K_o]:
-            self.hue += 0.01
-            if self.hue > 1:
-                self.hue = 0
-            color = colorsys.hsv_to_rgb(self.hue,1,1)
-            color2 = (color[0]*255,color[1]*255,color[2]*255)
-            self.color = color2
-            
+       
 
         if self.player_pos.x <= 0:
             self.player_pos.x = 0 + self.radius
@@ -56,6 +54,18 @@ class ball():
             self.ball_vel_y = self.ball_vel_y * -1
 
 
+        self.rect.x = self.player_pos.x
+
+        self.rect.y = self.player_pos.y
+
         pygame.draw.circle(self.screen,self.color, self.player_pos, self.radius)
 
+        
+    def changeColor(self):
+        self.hue += 0.05
+        if self.hue > 1:
+            self.hue = 0
+        color = colorsys.hsv_to_rgb(self.hue,1,1)
+        color2 = (color[0]*255,color[1]*255,color[2]*255)
+        self.color = color2
         
