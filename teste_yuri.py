@@ -7,6 +7,7 @@ import colorsys
 pygame.init()
 WIDTH, HEIGHT = 1280,720 #largura e altura
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
+pygame.display.set_caption("Teste Yuri")
 #fps
 clock = pygame.time.Clock()
 dt = 0
@@ -18,9 +19,9 @@ ball1 = ball(screen,'red',50)
 ball2 = ball(screen,'blue',50)
 ball3 = ball(screen,'green',35)
 ball4 = ball(screen,'yellow',35)
-spriteBalls.add(ball2)
-spriteBalls.add(ball3)
-spriteBalls.add(ball4)
+#spriteBalls.add(ball2)
+#spriteBalls.add(ball3)
+#spriteBalls.add(ball4)
 
 running = True
 while running:
@@ -33,9 +34,12 @@ while running:
     # fill the screen with a color to wipe away anything from last frame
     screen.fill("black")
 
-    if pygame.sprite.collide_circle(ball1,ball2):
-        ball1.changeColor() 
-
+    if ball1.rect.colliderect(ball2):
+        ball1.changeColor()
+        ball1.colide() 
+    if ball2.rect.colliderect(ball1):
+        ball2.changeColor()
+        ball2.colide()
     #Bola
     ball1.atualize(dt,(WIDTH, HEIGHT))
     ball2.atualize(dt,(WIDTH,HEIGHT))

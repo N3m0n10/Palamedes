@@ -18,10 +18,12 @@ class ball(pygame.sprite.Sprite):
         #color
         self.hue = 0
         self.twopi = 2*math.pi #otimizar para nao ficar sempre calculando isso
+        
+        self.player_pos = pygame.Vector2(random.randint(0,screen.get_width()),random.randint(0,screen.get_width()))
+        #self.player_pos = pygame.Vector2(screen.get_width() / 2, screen.get_height() / 2)
 
-        self.player_pos = pygame.Vector2(screen.get_width() / 2, screen.get_height() / 2)
-   
-        self.rect = pygame.Rect(0,0,radius,radius)
+        #pra area estar no mesmo lugar do desenho
+        self.rect = pygame.Rect(self.player_pos.x,self.player_pos.y,radius,radius)
 
     
     def atualize(self,dt, tela:tuple):
@@ -53,9 +55,9 @@ class ball(pygame.sprite.Sprite):
             self.player_pos.y = tela[1] -  self.radius
             self.ball_vel_y = self.ball_vel_y * -1
 
-
+        
+        #to utilizando o rect para testar colizao   
         self.rect.x = self.player_pos.x
-
         self.rect.y = self.player_pos.y
 
         pygame.draw.circle(self.screen,self.color, self.player_pos, self.radius)
@@ -69,3 +71,7 @@ class ball(pygame.sprite.Sprite):
         color2 = (color[0]*255,color[1]*255,color[2]*255)
         self.color = color2
         
+
+    def colide(self):
+        self.ball_vel_x *= -1
+        self.ball_vel_y *= -1
