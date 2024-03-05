@@ -10,8 +10,6 @@ screen = pygame.display.set_mode((WIDTH, HEIGHT))
 #fps
 clock = pygame.time.Clock()
 dt = 0
-#colisão var
-colide = 0
 #pontuação
 pontos1 = 0
 pontos2 = 0
@@ -34,7 +32,7 @@ while running:
     screen.fill("black")      
 
     #Bola
-    ball1.atualize(dt, (WIDTH, HEIGHT) , colide)
+    ball1.atualize(dt, (WIDTH, HEIGHT))
     if players == 0:
         bot.atualize(dt, (WIDTH, HEIGHT) , 0 , ball1.player_pos.y )
     player1.atualize(dt, (WIDTH, HEIGHT) , 1 , ball1.player_pos.y )
