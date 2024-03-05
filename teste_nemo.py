@@ -3,17 +3,16 @@ import pygame
 from ball import ball
 from player import player
 from superpongmain import players
+import placar
 # pygame setup
 pygame.init()
+pygame.font.init()
 WIDTH, HEIGHT = 1280,720 #largura e altura
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 #fps
 clock = pygame.time.Clock()
 dt = 0
-#pontuação
-pontos1 = 0
-pontos2 = 0
-
+#------------
 ball1 = ball(screen,'red',40)
 player1 = player(screen, 'blue' , 20, 70 , 180,0,)
 if players == 1:
@@ -38,7 +37,9 @@ while running:
     player1.atualize(dt, (WIDTH, HEIGHT) , 1 , ball1.player_pos.y )
     if players == 1:
         player2.atualize(dt, (WIDTH, HEIGHT) , 2 , ball1.player_pos.y )
-   
+    
+    num_pontos = placar.pontuacao(ball1.player_pos.x, (100,1180))
+    placar.placar(screen , num_pontos[0], num_pontos[1])
     # flip() the display to put your work on screen
     pygame.display.flip()
 
