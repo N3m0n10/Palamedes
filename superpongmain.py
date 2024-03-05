@@ -1,4 +1,4 @@
-import pygame , sys
+import pygame 
 
 ##PYGAME_SETUP---------------------------------------------
 pygame.init()
@@ -13,11 +13,13 @@ pygame.display.set_icon(icon_name)  #----> criar icône
 in_menu = True
 menu_font = pygame.font.SysFont('Comic Sans MS', 70)    #----->fazer função cria texto
 texto_menu = menu_font.render('Press Space', True, (90, 100, 240))
+texto_selectplayer = menu_font.render('Press 0 for 1p or 1 for 2p', True, (90, 40, 240))
 background = pygame.image.load('background.jpg').convert()
 background = pygame.transform.smoothscale(background, screen.get_size())
-stages = [0,1,2]
+stages = [0,1,2,3]
 stages = iter(stages)
 estagio = next(stages)
+players = -1
 ##FUNÇÕES_BASE--------------------------------------------------------
 def stage(estagio):
     match estagio:
@@ -25,22 +27,27 @@ def stage(estagio):
             return "menu"    #------->mudar nomes
 
         case 1 :
-            return "fase"
+            return "select_player"
             
+        case 2 :
+            return "fase"
+
         case 3 :
             #return pontuacao
             pass
 
-        case False :  #------> provisório
+        case False :
             pass
  
-
 
 
 ##menu-----------------------------------------
 def menu_screen():    #---------De preferência ransformar num objeto, dentro de stage
     screen.blit(background, (0, 0))
     screen.blit(texto_menu, (500,240))
+
+def select_player_screen():
+    screen.blit(texto_selectplayer, (100,240))
 
 
 ##--------------------------------------------------------------------
@@ -51,11 +58,19 @@ while running:
         if event.type == pygame.QUIT:
             running = False
         
-        if event.type == pygame.KEYDOWN and stage(estagio) == "menu":  #usar pygamr.key.get_pressed()
+        elif event.type == pygame.KEYDOWN and stage(estagio) == "select_player":  #usar pygamr.key.get_pressed()
+            if event.key == pygame.K_0:
+                players = 0
+                estagio = next(stages)
+            elif event.key == pygame.K_1:
+                players = 1
+                estagio = next(stages)
+
+        elif event.type == pygame.KEYDOWN and stage(estagio) == "menu":  #usar pygamr.key.get_pressed()
             if event.key == pygame.K_SPACE:    
                 estagio = next(stages)
-                print("teste_space")
-
+        
+        
     # fill the screen with a color to wipe away anything from last frame
     screen.fill("White")
     stage(estagio)
@@ -63,6 +78,9 @@ while running:
     ##CHAMADAS---------------------------------------------
     if stage(estagio) == "menu": #-----------> mudar
         menu_screen()
+
+    if stage(estagio) == "select_player": #error -------> repetindo 
+        select_player_screen()
 
     if stage(estagio) == "fase":
         with open("teste_nemo.py", "r") as file:  

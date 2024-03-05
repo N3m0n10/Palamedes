@@ -42,13 +42,18 @@ class ball(pygame.sprite.Sprite):
             self.player_pos.x = 0 + self.radius
             self.ball_vel_x =   self.ball_vel_x * -1
 
+            self.ball_vel_x =   self.ball_vel_x * -1
+
         if self.player_pos.x >= tela[0]:
             self.player_pos.x = tela[0] - self.radius
+            self.ball_vel_x = self.ball_vel_x * -1
             self.ball_vel_x = self.ball_vel_x * -1
 
 
         if self.player_pos.y <= 0:
             self.player_pos.y = 0 + self.radius
+            self.ball_vel_y = self.ball_vel_y * -1
+
             self.ball_vel_y = self.ball_vel_y * -1
 
         if self.player_pos.y >= tela[1]:
