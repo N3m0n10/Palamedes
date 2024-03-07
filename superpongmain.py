@@ -4,7 +4,7 @@ import pygame
 pygame.init()
 pygame.font.init()
 screen = pygame.display.set_mode((1280, 720))
-pygame.display.set_caption('SUPER PONG')
+pygame.display.set_caption('PONG')
 clock = pygame.time.Clock()
 running = True
 icon_name = pygame.image.load('icon_name.jfif').convert()   #

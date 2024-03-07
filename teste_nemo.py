@@ -12,14 +12,16 @@ screen = pygame.display.set_mode((WIDTH, HEIGHT))
 #fps
 clock = pygame.time.Clock()
 dt = 0
+pontos_1, pontos_2 = 0 , 0
 #------------
-ball1 = ball(screen,'red',40)
-player1 = player(screen, 'blue' , 20, 70 , 180,0,)
-if players == 1:
-    player2 = player(screen, 'orange' , 20, 70 , 1100,1)
-if players == 0:
-    bot = player(screen, 'orange' , 20, 70 , 1100,0)
-
+ball_radius = 20
+player_size = 150
+ball1 = ball(screen,'red',ball_radius)
+ball1_rect = ball1.rect
+player1 = player(screen, 'blue' , 20, player_size , 180,0,)
+player2 = player(screen, 'orange' , 20, player_size , 1100,1)
+bot = player(screen, 'orange' , 20, player_size , 1100,0)
+#--------------------
 running = True
 while running:
     #SAI COM O "X" DE FECHAR A JANELA
@@ -32,14 +34,29 @@ while running:
 
     #Bola
     ball1.atualize(dt, (WIDTH, HEIGHT))
+    #jogadores e BOT - ATUALIZE
     if players == 0:
         bot.atualize(dt, (WIDTH, HEIGHT) , 0 , ball1.player_pos.y )
     player1.atualize(dt, (WIDTH, HEIGHT) , 1 , ball1.player_pos.y )
     if players == 1:
         player2.atualize(dt, (WIDTH, HEIGHT) , 2 , ball1.player_pos.y )
     
-    num_pontos = placar.pontuacao(ball1.player_pos.x, (100,1180))
-    placar.placar(screen , num_pontos[0], num_pontos[1])
+    #colisão
+    if pygame.Rect.colliderect(ball1_rect, player1.rect) \
+    or pygame.Rect.colliderect(ball1_rect, player2.rect) \
+    or pygame.Rect.colliderect(ball1_rect, bot.rect):
+        if ball1.ball_vel_x > 0: #adicionar velocidade a bola pela velocidade do jogador
+            pass
+        if ball1.ball_vel_x < 0: 
+            pass
+        ball1.ball_vel_x *= -1
+            
+    #pontuação
+    if ball1.player_pos.x >= 1280 - ball_radius:
+        pontos_1 += 1   
+    if ball1.player_pos.x <=  ball_radius:
+        pontos_2 += 1    
+    placar.placar(screen , pontos_1, pontos_2)
     # flip() the display to put your work on screen
     pygame.display.flip()
 
