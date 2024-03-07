@@ -1,4 +1,5 @@
 import pygame 
+import colorsys
 
 ##PYGAME_SETUP---------------------------------------------
 pygame.init()
@@ -12,14 +13,14 @@ pygame.display.set_icon(icon_name)  #----> criar icône
 ##UNIVERSAIS_VAR-------------------------------------------------
 in_menu = True
 menu_font = pygame.font.SysFont('Comic Sans MS', 70)    #----->fazer função cria texto
-texto_menu = menu_font.render('Press Space', True, (90, 100, 240))
 texto_selectplayer = menu_font.render('Press 0 for 1p or 1 for 2p', True, (90, 40, 240))
-background = pygame.image.load('background.jpg').convert()
+background = pygame.image.load('background.png').convert()
 background = pygame.transform.smoothscale(background, screen.get_size())
 stages = [0,1,2,3]
 stages = iter(stages)
 estagio = next(stages)
 players = -1
+hue = 0 
 ##FUNÇÕES_BASE--------------------------------------------------------
 def stage(estagio):
     match estagio:
@@ -42,12 +43,17 @@ def stage(estagio):
 
 
 ##menu-----------------------------------------
-def menu_screen():    #---------De preferência ransformar num objeto, dentro de stage
+def menu_screen(color):    #---------De preferência ransformar num objeto, dentro de stage
+    texto_menu = menu_font.render('Press Space', True, color)
     screen.blit(background, (0, 0))
-    screen.blit(texto_menu, (500,240))
+    screen.blit(texto_menu, (450,600))
 
 def select_player_screen():
     screen.blit(texto_selectplayer, (100,240))
+
+def changeColor(hue):
+        color = colorsys.hsv_to_rgb(hue,1,1)
+        return (color[0]*255,color[1]*255,color[2]*255)
 
 
 ##--------------------------------------------------------------------
@@ -74,10 +80,15 @@ while running:
     # fill the screen with a color to wipe away anything from last frame
     screen.fill("White")
     stage(estagio)
-
+    
     ##CHAMADAS---------------------------------------------
+    
     if stage(estagio) == "menu": #-----------> mudar
-        menu_screen()
+        if hue > 1:
+            hue = 0
+        hue += 0.005
+        cor = changeColor(hue)
+        menu_screen(cor)
 
     if stage(estagio) == "select_player": #error -------> repetindo 
         select_player_screen()
