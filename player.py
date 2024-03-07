@@ -10,7 +10,8 @@ class player():
         self.size_y = size_y
         self.posit_x = posit_x
         self.player_num = player_num
-        self.movement_keys = [[pygame.K_w,pygame.K_s,pygame.K_a,pygame.K_d], \
+        self.movement_keys = [[None],\
+                              [pygame.K_w,pygame.K_s,pygame.K_a,pygame.K_d], \
                               [pygame.K_UP,pygame.K_DOWN,pygame.K_LEFT,pygame.K_RIGHT]]
         self.player_pos = pygame.Vector2(posit_x ,screen.get_height() / 2)
         self.rect = pygame.Rect(self.player_pos.x,self.player_pos.y,size_x,size_y)

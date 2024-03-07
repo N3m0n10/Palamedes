@@ -18,9 +18,11 @@ ball_radius = 20
 player_size = 150
 ball1 = ball(screen,'red',ball_radius)
 ball1_rect = ball1.rect
-player1 = player(screen, 'blue' , 20, player_size , 180,0,)
-player2 = player(screen, 'orange' , 20, player_size , 1100,1)
-bot = player(screen, 'orange' , 20, player_size , 1100,0)
+player1 = player(screen, 'blue' , 20, player_size , 180,1)
+if players == 0:
+    opponent = player(screen, 'White' , 20, player_size , 1100,0)
+elif players == 1:
+    opponent = player(screen, 'orange' , 20, player_size , 1100,2) 
 #--------------------
 running = True
 while running:
@@ -35,16 +37,15 @@ while running:
     #Bola
     ball1.atualize(dt, (WIDTH, HEIGHT))
     #jogadores e BOT - ATUALIZE
-    if players == 0:
-        bot.atualize(dt, (WIDTH, HEIGHT) , 0 , ball1.player_pos.y )
     player1.atualize(dt, (WIDTH, HEIGHT) , 1 , ball1.player_pos.y )
+    if players == 0:
+        opponent.atualize(dt, (WIDTH, HEIGHT) , 0 , ball1.player_pos.y ) #bot
     if players == 1:
-        player2.atualize(dt, (WIDTH, HEIGHT) , 2 , ball1.player_pos.y )
+        opponent.atualize(dt, (WIDTH, HEIGHT) , 2 , ball1.player_pos.y ) #player 2
     
     #colisão
     if pygame.Rect.colliderect(ball1_rect, player1.rect) \
-    or pygame.Rect.colliderect(ball1_rect, player2.rect) \
-    or pygame.Rect.colliderect(ball1_rect, bot.rect):
+    or pygame.Rect.colliderect(ball1_rect, opponent.rect):
         if ball1.ball_vel_x > 0: #adicionar velocidade a bola pela velocidade do jogador
             pass
         if ball1.ball_vel_x < 0: 
