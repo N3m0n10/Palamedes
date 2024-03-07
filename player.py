@@ -16,11 +16,11 @@ class player():
         self.player_pos = pygame.Vector2(posit_x ,screen.get_height() / 2)
         self.rect = pygame.Rect(self.player_pos.x,self.player_pos.y,size_x,size_y)
     #FUNÇÂO DE MOVIMENTO----> MODIFICAR PARA ADEQUAR O BOT
-    def move(self, movement_keys ,  keys, dt, player_num, ball_pos_y ): 
+    def move(self, movement_keys ,  keys, dt, player_num, ball_pos_y , ball_pos_x ): 
         if player_num == 0:
-            if self.player_pos.y > ball_pos_y:
+            if self.player_pos.y > ball_pos_y and ball_pos_x < self.player_pos.x:
                 self.player_pos.y -= 900 *dt
-            elif self.player_pos.y < ball_pos_y:
+            elif self.player_pos.y < ball_pos_y and ball_pos_x < self.player_pos.x:
                 self.player_pos.y += 900 *dt
         else:
             if keys[movement_keys[0]]:
@@ -32,10 +32,10 @@ class player():
             #if keys[movement_keys[3]]:
             #    self.player_pos.x += 600 *dt
     
-    def atualize(self,dt, tela:tuple,player_num ,ball_pos_y ):
+    def atualize(self,dt, tela:tuple,player_num ,ball_pos_y , ball_pos_x):
         keys = pygame.key.get_pressed()
 
-        self.move( self.movement_keys[self.player_num], keys, dt, player_num, ball_pos_y )
+        self.move( self.movement_keys[self.player_num], keys, dt, player_num, ball_pos_y, ball_pos_x )
         
         #BORDAS_X
         #if self.player_pos.x <= 0 :
