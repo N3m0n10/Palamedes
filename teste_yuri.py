@@ -36,10 +36,10 @@ while running:
 
     if ball1.rect.colliderect(ball2):
         ball1.changeColor()
-        ball1.colide() 
+        #ball1.colide() 
     if ball2.rect.colliderect(ball1):
         ball2.changeColor()
-        ball2.colide()
+        #ball2.colide()
     #Bola
     ball1.atualize(dt,(WIDTH, HEIGHT))
     ball2.atualize(dt,(WIDTH,HEIGHT))

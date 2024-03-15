@@ -14,6 +14,8 @@ class ball():
         self.ball_vel_x = random.randint(6,20)
         self.ball_vel_y = random.randint(6,20) 
 
+        self.ball_max_speed = 20
+
         #color
         self.hue = 0
         self.twopi = 2*math.pi #otimizar para nao ficar sempre calculando isso
@@ -51,6 +53,12 @@ class ball():
         self.rect.y = self.player_pos.y
 
         pygame.draw.circle(self.screen,self.color, self.player_pos, self.radius)
+        #limite de velocidade da bola
+        if abs(self.ball_vel_y) > self.ball_max_speed:
+            if self.ball_vel_y > 0:
+                self.ball_vel_y = self.ball_max_speed
+            else: self.ball_vel_y = self.ball_max_speed* - 1
+
 
     def changeColor(self):
         self.hue += 0.05

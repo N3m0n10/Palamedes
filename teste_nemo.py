@@ -79,11 +79,6 @@ while running:
                 ball1.ball_vel_y +=  opponent.player_pos.y > last_opponent_pos
             ball1.ball_vel_x *= -1
     
-        #limite de velocidade da bola
-        if abs(ball1.ball_vel_y) > ball_max_speed_y:
-            if ball1.ball_vel_y > 0:
-                ball1.ball_vel_y = ball_max_speed_y
-            else: ball1.ball_vel_y = ball_max_speed_y * - 1
 
         #pontuação
         if ball1.player_pos.x >= 1280 - ball_radius:
