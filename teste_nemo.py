@@ -9,6 +9,11 @@ pygame.init()
 pygame.font.init()
 WIDTH, HEIGHT = 1280,720 #largura e altura
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
+pygame.mixer.init() #sound function
+coll_snd = pygame.mixer.Sound("collide_pong.mp3")#collision sound file  
+lose = pygame.mixer.Sound('lose.mp3') 
+victory= pygame.mixer.Sound('victory.mp3')
+p_snd = True
 #fps
 clock = pygame.time.Clock()
 dt = 0
@@ -25,14 +30,20 @@ if players == 0:
     opponent = player(screen, 'White' , 20, player_size , 1100,0)
 elif players == 1:
     opponent = player(screen, 'orange' , 20, player_size , 1100,2) 
-def win(pontos_1,pontos_2):
+def win(pontos_1,pontos_2, played_snd):
         match(pontos_1):
             case 3:
+                if played_snd == True:
+                    victory.play()
                 return "PLAYER 1 WINS",True
         match(pontos_2):
             case 3:
                 if players == 0:
+                    if played_snd == True:
+                        lose.play()
                     return "BOT WINS",True
+                if played_snd == True:
+                    victory.play()
                 return "PLAYER 2 WINS",True
         return '' , False
 
@@ -44,14 +55,14 @@ while running:
     #SAI COM O "X" DE FECHAR A JANELA
     for event in pygame.event.get():
         if event.type == pygame.QUIT or \
-            win(pontos_1,pontos_2)[1] and event.type == pygame.KEYDOWN:
+            win(pontos_1,pontos_2, p_snd)[1] and event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE:
                 running = False
 
     # fill the screen with a color to wipe away anything from last frame
     screen.fill("black")      
 
-    if not win(pontos_1,pontos_2)[1]:
+    if not win(pontos_1,pontos_2,p_snd )[1]:
         #Bola
         ball1.atualize(dt, (WIDTH, HEIGHT))
         #jogadores e BOT - ATUALIZE
@@ -70,6 +81,7 @@ while running:
             if player1.player_pos.y > last_player1_pos or player1.player_pos.y < last_player1_pos :
                 ball1.ball_vel_y +=  player1.player_pos.y - last_player1_pos
             ball1.ball_vel_x *= -1
+            coll_snd.play() #play collision sound
         if pygame.Rect.colliderect(ball1_rect, opponent.rect):
             if abs(abs(opponent.player_pos.y) - abs(ball1.player_pos.y)) >= player_half_size + ball_radius + 5:
                 if ball1.player_pos.y > opponent.player_pos.y and ball1.ball_vel_y > 0\
@@ -78,6 +90,7 @@ while running:
             if opponent.player_pos.y > last_opponent_pos or opponent.player_pos.y < last_opponent_pos:
                 ball1.ball_vel_y +=  opponent.player_pos.y > last_opponent_pos
             ball1.ball_vel_x *= -1
+            coll_snd.play()  #play collision sound
     
 
         #pontuação
@@ -91,10 +104,11 @@ while running:
         last_opponent_pos = opponent.player_pos.y
 
     #win
-    if win(pontos_1,pontos_2)[1]:
-        win_text = win_font.render(win(pontos_1, pontos_2)[0], True, (90, 100, 240))
+    if win(pontos_1,pontos_2, p_snd)[1]:
+        win_text = win_font.render(win(pontos_1, pontos_2, p_snd)[0], True, (90, 100, 240))
         screen.blit(win_text, (500,240))
         screen.blit(finish_text, (500,440))
+        p_snd = False
     # flip() adiciona os programa à tela
     pygame.display.flip()
 
