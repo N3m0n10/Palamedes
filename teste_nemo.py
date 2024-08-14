@@ -13,7 +13,7 @@ pygame.mixer.init() #sound function
 coll_snd = pygame.mixer.Sound("collide_pong.mp3")#collision sound file  
 lose = pygame.mixer.Sound('lose.mp3') 
 victory= pygame.mixer.Sound('victory.mp3')
-p_snd = True
+p_snd = True  #limitate sound playtime
 #fps
 clock = pygame.time.Clock()
 dt = 0
@@ -49,6 +49,7 @@ def win(pontos_1,pontos_2, played_snd):
 
 win_font = pygame.font.SysFont('Comic Sans MS', 70)    #----->fazer função cria texto
 finish_text = win_font.render("Press SPACE to EXIT", True, (90, 100, 240))
+finish_text_ln_2 = win_font.render("Press BACKSPACE to RESTART", True, (90, 100, 240))
 #--------------------
 running = True
 while running:
@@ -58,7 +59,11 @@ while running:
             win(pontos_1,pontos_2, p_snd)[1] and event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE:
                 running = False
-
+            elif event.key == pygame.K_BACKSPACE:
+                with open("superpongmain.py", "r") as file:  
+                     exec(file.read(), {"__name__": ""})
+                     running = False
+            
     # fill the screen with a color to wipe away anything from last frame
     screen.fill("black")      
 
@@ -82,7 +87,7 @@ while running:
                 ball1.ball_vel_y +=  player1.player_pos.y - last_player1_pos
             ball1.ball_vel_x *= -1
             coll_snd.play() #play collision sound
-        if pygame.Rect.colliderect(ball1_rect, opponent.rect):
+        if pygame.Rect.colliderect(ball1_rect, opponent.rect): ##----->redo logic, use ball poschange
             if abs(abs(opponent.player_pos.y) - abs(ball1.player_pos.y)) >= player_half_size + ball_radius + 5:
                 if ball1.player_pos.y > opponent.player_pos.y and ball1.ball_vel_y > 0\
                 or ball1.player_pos.y < opponent.player_pos.y and ball1.ball_vel_y < 0:
@@ -106,8 +111,9 @@ while running:
     #win
     if win(pontos_1,pontos_2, p_snd)[1]:
         win_text = win_font.render(win(pontos_1, pontos_2, p_snd)[0], True, (90, 100, 240))
-        screen.blit(win_text, (500,240))
-        screen.blit(finish_text, (500,440))
+        screen.blit(win_text, (50,240))
+        screen.blit(finish_text, (50,440))
+        screen.blit(finish_text_ln_2, (50,540))
         p_snd = False
     # flip() adiciona os programa à tela
     pygame.display.flip()

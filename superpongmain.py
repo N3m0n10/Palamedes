@@ -21,12 +21,12 @@ stages = iter(stages)
 estagio = next(stages)
 players = -1
 hue = 0 
-##FUNÇÕES_BASE--------------------------------------------------------
+##FUNÇÕES_BASE
 def stage(estagio):
     match estagio:
         case 0 :
             return "menu"    #------->mudar nomes
-
+        ##--------------->create select game ---> new vers == new gamemodes
         case 1 :
             return "select_player"
             
