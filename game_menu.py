@@ -2,7 +2,7 @@ import pygame
 
 
 #create game list
-game_list = ["pong", "example", 'lorem ipsum', 'dolor sit', 'amet', 'consectetur', 'adipiscing', "secret"]   #add random mode
+game_list = ["pong_game", "example", 'lorem ipsum', 'dolor sit', 'amet', 'consectetur', 'adipiscing', "secret"]   #add random mode
 num_games = len(game_list )-1 #desconsider the easter egg
 #set icons size and position
 icon_size = (300, 200)
