@@ -33,7 +33,7 @@ run= 0
 # Variável de deslocamento para a rolagem
 scroll_offset = 0
 # Limite de rolagem (o máximo que a superfície pode rolar)
-scroll_limit = (srfc_height) - 720
+scroll_limit = (srfc_height) - 720 
 # Velocidade de rolagem
 scroll_speed = 20
 ##BASE_FUNCTIONS---------------------------------------------
@@ -81,7 +81,6 @@ def game_menu_screen(game_list, pos_list,icon_size, excell, srfc_height,run):  #
 ##On click event must be created in #main #events
 #create  game icons --> clickable rectangle 
     run = 1
-
 ##--------------------------------------------------------------------
 while running:
     # poll for events
@@ -108,8 +107,13 @@ while running:
                 scroll_offset = min(scroll_offset + scroll_speed, scroll_limit)
             elif event.y > 0:  # Scroll para cima
                 scroll_offset = max(scroll_offset - scroll_speed, 0)
-           
         
+        elif event.type == pygame.MOUSEBUTTONDOWN and stage(estagio) == "game_menu":
+            for i, item in enumerate(game_list):
+                if pygame.Rect(pos_list[i], icon_size).collidepoint(pygame.mouse.get_pos()):
+                    game = game_list[i]
+                    estagio = next(stages)
+
         
     # fill the screen with a color to wipe away anything from last frame
     screen.fill("White")
@@ -132,7 +136,8 @@ while running:
 
     if stage(estagio) == "fase": #will be renamed and triggered by game_menu
         with open("teste_nemo.py", "r") as file:  #to be done: f'{game}.py
-            exec(file.read(), {"__name__": ""})
+            exec(file.read(), {"__main__": ""})  ##"__name__": ""
+            ###add exec file name
 
     # flip() the display to put your work on screen
     pygame.display.flip()
