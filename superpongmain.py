@@ -136,7 +136,7 @@ while running:
 
     if stage(estagio) == "fase": #will be renamed and triggered by game_menu
         try:
-            with open("f'{game}.py.py", "r") as file:  #to be done: f'{game}.py
+            with open(f"{game}.py", "r") as file:  #to be done: f'{game}.py
                 exec(file.read(), {"__main__": ""})  ##"__name__": ""
         except: 
             print('error - game does not exist')
