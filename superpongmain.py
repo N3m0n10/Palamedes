@@ -1,13 +1,24 @@
 import pygame 
 import colorsys
 from game_menu import excell, surface_size , game_list, icon_size, srfc_height, pos_list
-import subprocess
+#import subprocess  ###will be used later
+import os
+import itertools
 
-#run game_menu.py as a subprocess
-subprocess.run(['python', 'game_menu.py'])
+base_dir = os.path.dirname(os.path.abspath(__file__)) # Get the directory of the current script
+def load_image_from_subfolder(image_name, subfolder="game_thumb"): #fix the error alert
+    # Build the full path to the image based on the base_dir
+    image_path = os.path.join(base_dir, "images", subfolder, image_name)
+    if os.path.exists(image_path):
+        return pygame.image.load(image_path)
+    else:
+        raise FileNotFoundError(f"Image not found: {image_path}")
+
+#subprocess.run(['python', 'game_menu.py','--subprocess'])#run game_menu.py as a subprocess
+                                          #read  and arrange games for menu
+
 ##PYGAME_SETUP---------------------------------------------
 pygame.init()
-pygame.font.init()
 #screen setup
 screen = pygame.display.set_mode((1280, 720))
 game_menu_surface = pygame.Surface((1280, srfc_height)) ###excell is calculated in game_menu.py
@@ -23,8 +34,8 @@ menu_font = pygame.font.SysFont('Comic Sans MS', 70)    #----->fazer função cr
 texto_selectplayer = menu_font.render('Press 0 for 1p or 1 for 2p', True, (90, 40, 240))
 background = pygame.image.load('background.png').convert()
 background = pygame.transform.smoothscale(background, screen.get_size())
-stages = [0,1,2,3]
-stages = iter(stages)
+stages_list = [0,1,2,3]
+stages = itertools.cycle(stages_list)
 estagio = next(stages)
 players = -1
 hue = 0 
@@ -40,8 +51,8 @@ scroll_speed = 20
 def stage(estagio):
     match estagio:
         case 0 :
-            return "menu"    #------->mudar nomes
-        ##--------------->create select game ---> new vers == new gamemodes
+            return "menu"    
+
         case 1 :
             return "game_menu"
 
@@ -54,7 +65,6 @@ def stage(estagio):
         case False :
             pass
  
-
 
 ##menu-----------------------------------------
 def menu_screen(color):    #---------De preferência ransformar num objeto, dentro de stage
@@ -74,10 +84,16 @@ def changeColor(hue):
 
 def game_menu_screen(game_list, pos_list,icon_size, excell, srfc_height,run):  #exclude unused vars
     if run == 0:
-        for i, item in enumerate(game_list):
+        thb_img = []
+        for i, item in enumerate(game_list): 
             recta = pygame.Rect(pos_list[i], icon_size)
             pygame.draw.rect(game_menu_surface, 'white' ,recta)
+            thb_img.append(load_image_from_subfolder(f'{item}_thumb_image.png'))
     screen.blit(game_menu_surface, (0, -scroll_offset))
+    for i in range(len(game_list)):
+        image_pos = (pos_list[i][0], pos_list[i][1] - scroll_offset)
+        screen.blit(thb_img[i], image_pos) #print the image in the rectangle
+        #FIX OFFSET FOR IMAGES
 ##On click event must be created in #main #events
 #create  game icons --> clickable rectangle 
     run = 1
@@ -93,7 +109,7 @@ while running:
             if event.key == pygame.K_0:
                 players = 0
                 estagio = next(stages)
-            elif event.key == pygame.K_1:
+            if event.key == pygame.K_1:
                 players = 1
                 estagio = next(stages)
 
@@ -121,7 +137,7 @@ while running:
     
     ##CHAMADAS---------------------------------------------
     
-    if stage(estagio) == "menu": #-----------> mudar
+    if stage(estagio) == "menu": 
         if hue > 1:
             hue = 0
         hue += 0.005
@@ -136,14 +152,15 @@ while running:
 
     if stage(estagio) == "fase": #will be renamed and triggered by game_menu
         try:
-            with open(f"{game}.py", "r") as file:  #to be done: f'{game}.py
-                exec(file.read(), {"__main__": ""})  ##"__name__": ""
+            with open(f"{game}.py", "r") as file:  #change to import lib ---> change pong for no self imports
+                exec(file.read(), {"__name__": ""})  ##"__name__": ""
+                ruunning = False
         except: 
             print('error - game does not exist')
             running = False
 
     # flip() the display to put your work on screen
-    pygame.display.flip()
+    pygame.display.flip()  #main seens to continue running, CHECK <---
 
     clock.tick(60)  # limits FPS to 60
 

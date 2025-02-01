@@ -1,10 +1,10 @@
-# Example file showing a circle moving on screen
 import pygame
 from ball import ball
 from player import player
-from superpongmain import players
+from superpongmain import players,estagio,stages
 import placar
-# pygame setup
+
+###pygame setup
 pygame.init()
 pygame.font.init()
 WIDTH, HEIGHT = 1280,720 #largura e altura
@@ -21,15 +21,15 @@ pontos_1, pontos_2 = 0 , 0
 #------------
 ball_max_speed_y = 20
 ball_radius = 20
-player_size = 150
+player_size = 150  #y_side
 player_half_size = player_size/2
 ball1 = ball(screen,'red',ball_radius)
 ball1_rect = ball1.rect
-player1 = player(screen, 'blue' , 20, player_size , 180,1)
+player1 = player(screen, 'blue' , 20, player_size , 180,1,"rect")
 if players == 0:
-    opponent = player(screen, 'White' , 20, player_size , 1100,0)
+    opponent = player(screen, 'White' , 20, player_size , 1100,0,"rect")
 elif players == 1:
-    opponent = player(screen, 'orange' , 20, player_size , 1100,2) 
+    opponent = player(screen, 'orange' , 20, player_size , 1100,2,"rect") 
 def win(pontos_1,pontos_2, played_snd):
         match(pontos_1):
             case 3:
@@ -55,13 +55,19 @@ running = True
 while running:
     #SAI COM O "X" DE FECHAR A JANELA
     for event in pygame.event.get():
-        if event.type == pygame.QUIT or \
-            win(pontos_1,pontos_2, p_snd)[1] and event.type == pygame.KEYDOWN:
+        if event.type == pygame.QUIT:
+            running = False
+        elif win(pontos_1,pontos_2, p_snd)[1] and event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE:
                 running = False
             elif event.key == pygame.K_BACKSPACE:
                 with open("superpongmain.py", "r") as file:  
                      exec(file.read(), {"__name__": ""})
+                     running = False
+            elif event.key == pygame.K_b:  #not working
+                estagio = next(stages)
+                with open("superpongmain.py", "r") as file:  
+                     exec(file.read(), {"__main__": ""})
                      running = False
             
     # fill the screen with a color to wipe away anything from last frame
