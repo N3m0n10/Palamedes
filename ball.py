@@ -5,15 +5,19 @@ import random
 
 class ball():
 
-    def __init__(self,screen, color, radius,limit_speed = 20,min_speed = 6):
+    def __init__(self,screen, color, radius,limit_speed = 20,min_speed = 6,fixed_start_speed = False):
 
         self.screen = screen
         self.color = color
         self.radius = radius
         self.collide_border = False
 
-        self.ball_vel_x = random.randint(min_speed,limit_speed)
-        self.ball_vel_y = random.randint(min_speed,limit_speed) 
+        if fixed_start_speed:
+            self.ball_vel_x = random.randint(min_speed,limit_speed)
+            self.ball_vel_y = -limit_speed
+        else:
+            self.ball_vel_x = random.randint(min_speed,limit_speed)
+            self.ball_vel_y = random.randint(min_speed,limit_speed) 
 
         self.ball_max_speed = 20
 

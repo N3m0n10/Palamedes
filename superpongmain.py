@@ -8,7 +8,7 @@ import itertools
 base_dir = os.path.dirname(os.path.abspath(__file__)) # Get the directory of the current script
 def load_image_from_subfolder(image_name, subfolder="game_thumb"): #fix the error alert
     # Build the full path to the image based on the base_dir
-    image_path = os.path.join(base_dir, "images", subfolder, image_name)
+    image_path = os.path.join(base_dir, "assets", subfolder, image_name)
     if os.path.exists(image_path):
         return pygame.image.load(image_path)
     else:
@@ -151,10 +151,11 @@ while running:
         select_player_screen()
 
     if stage(estagio) == "fase": #will be renamed and triggered by game_menu
+        ruunning = False
         try:
             with open(f"{game}.py", "r") as file:  #change to import lib ---> change pong for no self imports
                 exec(file.read(), {"__name__": ""})  ##"__name__": ""
-                ruunning = False
+                
         except: 
             print('error - game does not exist')
             running = False

@@ -107,10 +107,8 @@ def return_to_start_pos():
     ball1.atualize(dt, (WIDTH, HEIGHT), True,[360,360])
     global wait
     global time_restart
-    time_restart = pygame.time.get_ticks()
+    time_restart = pygame.time.get_ticks() #start timer-
     wait = True
-    #pygame.draw.line(screen, "white", (360, 360), (360, 360), 5) #-->aponta na direção da velocidade da bola
-    #time.sleep(0.5) #provisory
 
 def end_game(max_points,points):
     global win
