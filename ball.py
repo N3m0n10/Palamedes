@@ -19,7 +19,7 @@ class ball():
             self.ball_vel_x = random.randint(min_speed,limit_speed)
             self.ball_vel_y = random.randint(min_speed,limit_speed) 
 
-        self.ball_max_speed = 20
+        self.ball_max_speed = limit_speed
 
         #color
         self.hue = 0
@@ -77,6 +77,11 @@ class ball():
                 if self.ball_vel_y > 0:
                     self.ball_vel_y = self.ball_max_speed
                 else: self.ball_vel_y = self.ball_max_speed* - 1
+
+            if abs(self.ball_vel_x) > self.ball_max_speed:
+                if self.ball_vel_x > 0:
+                    self.ball_vel_x = self.ball_max_speed
+                else: self.ball_vel_x = self.ball_max_speed* - 1
             
             if self.ball_vel_x == 0 and self.ball_vel_y == 0 and ball_should_not_stop[0]: #caso a bola nao tenha movimento
                 self.ball_vel_x = ball_should_not_stop[1]

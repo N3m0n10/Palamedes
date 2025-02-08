@@ -22,14 +22,16 @@ class player():
             self.player_pos = pygame.Vector2(posit_x ,posit_y)
         self.rect = pygame.Rect(self.player_pos.x,self.player_pos.y,size_x,size_y)
     ##FUNÇÂO DE MOVIMENTO----> MODIFICAR PARA ADEQUAR O BOT
-    def move(self, movement_keys ,  keys, dt, player_num, ball_pos_y , ball_pos_x ): 
+    
+    def move(self, movement_keys ,  keys, dt, player_num, ball_pos_y , ball_pos_x ,predicted_pos_y = None): 
 
         ##BOT config --- FOLLOW BALL 
         if player_num == 0:
-            if self.player_pos.y > ball_pos_y and ball_pos_x < self.player_pos.x:
-                self.player_pos.y -= 900 *dt
-            elif self.player_pos.y < ball_pos_y and ball_pos_x < self.player_pos.x:
+           
+            if ball_pos_y > self.player_pos.y :
                 self.player_pos.y += 900 *dt
+            elif ball_pos_y < self.player_pos.y :
+                self.player_pos.y -= 900 *dt
         
         ##PLAYERS MOVE --- RESTRICTED TO VERTICAL    
         else:

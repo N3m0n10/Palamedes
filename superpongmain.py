@@ -1,9 +1,8 @@
 import pygame 
 import colorsys
 from game_menu import excell, surface_size , game_list, icon_size, srfc_height, pos_list
-#import subprocess  ###will be used later
 import os
-import itertools
+import random
 
 base_dir = os.path.dirname(os.path.abspath(__file__)) # Get the directory of the current script
 def load_image_from_subfolder(image_name, subfolder="game_thumb"): #fix the error alert
@@ -13,9 +12,7 @@ def load_image_from_subfolder(image_name, subfolder="game_thumb"): #fix the erro
         return pygame.image.load(image_path)
     else:
         raise FileNotFoundError(f"Image not found: {image_path}")
-
-#subprocess.run(['python', 'game_menu.py','--subprocess'])#run game_menu.py as a subprocess
-                                          #read  and arrange games for menu
+    
 
 ##PYGAME_SETUP---------------------------------------------
 pygame.init()
@@ -29,14 +26,13 @@ running = True
 icon_name = pygame.image.load('icon_name.jfif').convert()   
 pygame.display.set_icon(icon_name)  #----> criar icône 
 ##UNIVERSAL_VAR-------------------------------------------------
-in_menu = True
 menu_font = pygame.font.SysFont('Comic Sans MS', 70)    #----->fazer função cria texto
-texto_selectplayer = menu_font.render('Press 0 for 1p or 1 for 2p', True, (90, 40, 240))
-background = pygame.image.load('background.png').convert()
+game_list_font = pygame.font.SysFont('Tahoma', 40)
+random_game_font = pygame.font.SysFont('Tahoma', 30)
+background = load_image_from_subfolder('background_main_menu.png',subfolder= "general_images")
 background = pygame.transform.smoothscale(background, screen.get_size())
-stages_list = [0,1,2,3]
-stages = itertools.cycle(stages_list)
-estagio = next(stages)
+stages_list = [0,1,2]
+estagio = 0
 players = -1
 hue = 0 
 run= 0
@@ -55,11 +51,8 @@ def stage(estagio):
 
         case 1 :
             return "game_menu"
-
-        case 2 :
-            return "select_player"
             
-        case 3 :
+        case 2 :
             return "fase"
 
         case False :
@@ -69,11 +62,9 @@ def stage(estagio):
 ##menu-----------------------------------------
 def menu_screen(color):    #---------De preferência ransformar num objeto, dentro de stage
     texto_menu = menu_font.render('Press Space', True, color)
-    screen.blit(background, (0, 0))
+    screen.blit(background, (0, 0))  #screen.blit(background_main_menu, (0, 0))
     screen.blit(texto_menu, (450,600))
 
-def select_player_screen():
-    screen.blit(texto_selectplayer, (100,240))
 
 def changeColor(hue):
         color = colorsys.hsv_to_rgb(hue,1,1)
@@ -93,10 +84,16 @@ def game_menu_screen(game_list, pos_list,icon_size, excell, srfc_height,run):  #
     for i in range(len(game_list)):
         image_pos = (pos_list[i][0], pos_list[i][1] - scroll_offset)
         screen.blit(thb_img[i], image_pos) #print the image in the rectangle
+    _text = game_list_font.render("You can Scroll!!", True, 'white')
+    screen.blit(_text, (10, 5 - scroll_offset))
+    random_text = random_game_font.render("RANDOM", True, 'black')
+    screen.blit(random_text, (814, 10 - scroll_offset))
+    random_rect = pygame.Rect(790, 5 , 165, 50)
+    pygame.draw.rect(game_menu_surface, 'orange' ,random_rect)
         #FIX OFFSET FOR IMAGES
 ##On click event must be created in #main #events
 #create  game icons --> clickable rectangle 
-    run = 1
+    run = 1  #flag to check multirun --> make use
 ##--------------------------------------------------------------------
 while running:
     # poll for events
@@ -105,17 +102,10 @@ while running:
         if event.type == pygame.QUIT:
             running = False
         
-        elif event.type == pygame.KEYDOWN and stage(estagio) == "select_player":  #usar pygamr.key.get_pressed()
-            if event.key == pygame.K_0:
-                players = 0
-                estagio = next(stages)
-            if event.key == pygame.K_1:
-                players = 1
-                estagio = next(stages)
 
         elif event.type == pygame.KEYDOWN and stage(estagio) == "menu":  #usar pygame.key.get_pressed()
             if event.key == pygame.K_SPACE:    
-                estagio = next(stages)
+                estagio = 1
 
         # Controle da rolagem usando as setas para cima e para baixo  ##not working ----> need to fix
         elif event.type == pygame.MOUSEWHEEL:
@@ -128,7 +118,10 @@ while running:
             for i, item in enumerate(game_list):
                 if pygame.Rect(pos_list[i], icon_size).collidepoint(pygame.mouse.get_pos()):
                     game = game_list[i]
-                    estagio = next(stages)
+                    estagio = 2
+                elif pygame.Rect(790, 5 , 165, 50).collidepoint(pygame.mouse.get_pos()):
+                    game = random.choice(game_list)
+                    estagio = 2
 
         
     # fill the screen with a color to wipe away anything from last frame
@@ -147,18 +140,15 @@ while running:
     if stage(estagio) == "game_menu": 
         game_menu_screen(game_list, pos_list,icon_size, excell, srfc_height, run)
 
-    if stage(estagio) == "select_player": #error -------> repetindo #will berelocated to each game 
-        select_player_screen()
-
     if stage(estagio) == "fase": #will be renamed and triggered by game_menu
         ruunning = False
+        print(game)
         try:
             with open(f"{game}.py", "r") as file:  #change to import lib ---> change pong for no self imports
-                exec(file.read(), {"__name__": ""})  ##"__name__": ""
+                exec(file.read())  ##"__name__": ""
                 
         except: 
             print('error - game does not exist')
-            running = False
 
     # flip() the display to put your work on screen
     pygame.display.flip()  #main seens to continue running, CHECK <---
