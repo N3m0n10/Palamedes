@@ -9,9 +9,9 @@ pygame.font.init()
 WIDTH, HEIGHT = 1280,720 #largura e altura
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.mixer.init() #sound function
-coll_snd = pygame.mixer.Sound("/sound/collide_pong.mp3")#collision sound file  
-lose = pygame.mixer.Sound('/sound/lose.mp3') 
-victory= pygame.mixer.Sound('/sound/victory.mp3')
+coll_snd = pygame.mixer.Sound('assets/sounds/collide_pong.mp3')#collision sound file  
+lose = pygame.mixer.Sound('assets/sounds/lose.mp3') 
+victory= pygame.mixer.Sound('assets/sounds/victory.mp3')
 p_snd = True  #limitate sound playtime
 #fps
 clock = pygame.time.Clock()
