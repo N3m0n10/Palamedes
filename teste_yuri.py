@@ -12,6 +12,7 @@ pygame.display.set_caption("Teste Yuri")
 clock = pygame.time.Clock()
 dt = 0
 
+fps = 60
 
 spriteBalls = pygame.sprite.Group()
 
@@ -23,6 +24,10 @@ ball4 = ball(screen,'yellow',35)
 #spriteBalls.add(ball3)
 #spriteBalls.add(ball4)
 
+#sincroniza o jogo com a variação do FPS
+# dt is delta time in seconds since last frame, used for framerate-
+# independent physics.
+dt = clock.tick(fps) / 1000
 running = True
 while running:
     # poll for events
@@ -43,16 +48,15 @@ while running:
     #Bola
     ball1.atualize(dt,(WIDTH, HEIGHT))
     ball2.atualize(dt,(WIDTH,HEIGHT))
-    #ball3.atualize(dt,(WIDTH,HEIGHT))
-    #ball4.atualize(dt,(WIDTH,HEIGHT))
+    ball3.atualize(dt,(WIDTH,HEIGHT))
+    ball4.atualize(dt,(WIDTH,HEIGHT))
 
 
     # flip() the display to put your work on screen
     pygame.display.flip()
-
     # limits FPS to 60
-    # dt is delta time in seconds since last frame, used for framerate-
-    # independent physics.
-    dt = clock.tick(60) / 1000
+    clock.tick(fps)
+
+    #dt = clock.tick(60) / 1000 #removi daqui porque sempre fica entre o mesmo numero
 
 pygame.quit()
