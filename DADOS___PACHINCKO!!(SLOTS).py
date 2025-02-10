@@ -4,13 +4,6 @@ import random
 pygame.init()
 screen = pygame.display.set_mode((1280,720))
 dados_font = pygame.font.SysFont('Arial', 70)
-
-#seções
-#menu
-#saves/start
-#inputs
-#in_game_menu_UI
-
 button = pygame.Rect(200,300,100,100)
 counting = True
 
