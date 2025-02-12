@@ -23,7 +23,7 @@ class player():
         self.rect = pygame.Rect(self.player_pos.x,self.player_pos.y,size_x,size_y)
     ##FUNÇÂO DE MOVIMENTO----> MODIFICAR PARA ADEQUAR O BOT
     
-    def move(self, movement_keys ,  keys, dt, player_num, ball_pos_y , ball_pos_x ,predicted_pos_y = None): 
+    def move(self, movement_keys ,  keys, dt, player_num, ball_pos_y, ball_pos_x,predicted_pos_y = None): 
 
         ##BOT config --- FOLLOW BALL 
         if player_num == 0:
@@ -55,7 +55,7 @@ class player():
                 if keys[movement_keys[3]]:
                     self.player_pos.x += 600 *dt
     
-    def atualize(self,dt, tela:tuple,player_num ,ball_pos_y , ball_pos_x):
+    def atualize(self,dt, tela:tuple,player_num ,ball_pos_y = None , ball_pos_x = None):
         keys = pygame.key.get_pressed()
 
         if self.format == "rect":
@@ -79,6 +79,8 @@ class player():
             pygame.draw.rect(self.screen,self.color , [self.player_pos.x, self.player_pos.y , self.size_x, self.size_y])
 
     def change_size(self, size_x, size_y):
+        self.rect.width = size_x   #inflate() and other methods # -> https://www.pygame.org/docs/ref/rect.html
+        self.rect.height = size_y
         self.size_x = size_x
         self.size_y = size_y
 
@@ -92,4 +94,8 @@ class player():
         color = colorsys.hsv_to_rgb(self.hue,1,1)
         color2 = (color[0]*255,color[1]*255,color[2]*255)
         self.color = color2
+
+    def set_pos(self,x,y):
+        self.player_pos.x = x
+        self.player_pos.y = y
         

@@ -101,3 +101,7 @@ class ball():
 
     def clean_colison(self):
         self.collide_border = False
+
+    def move_to(self,pos_x,pos_y):
+        self.player_pos.x = pos_x
+        self.player_pos.y = pos_y
