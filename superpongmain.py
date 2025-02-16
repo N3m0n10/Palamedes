@@ -146,12 +146,15 @@ while running:
         try:
             with open(f"{game}.py", "r") as file:  #change to import lib ---> change pong for no self imports
                 exec(file.read())  ##"__name__": ""
+            
                 
         except: 
             print('error - game does not exist')
+            #raise FileNotFoundError("Game not found")
+        continue  #fix pygame display error 
 
     # flip() the display to put your work on screen
-    pygame.display.flip()  #main seens to continue running, CHECK <---
+    pygame.display.flip()  
 
     clock.tick(60)  # limits FPS to 60
 
