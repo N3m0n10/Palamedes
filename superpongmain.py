@@ -149,6 +149,7 @@ while running:
                 
         except: 
             print('error - game does not exist')
+        continue
 
     # flip() the display to put your work on screen
     pygame.display.flip()  #main seens to continue running, CHECK <---
