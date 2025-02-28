@@ -1,4 +1,13 @@
-# *SUPERPONG* is a multi games plataform made entIrely with PYTHON
+# *SUPERPONG* is a multi games plataform made with PYTHON and GO
+
+### FEATURING
+
+* Pong (2 versions with PYGAME)
+* Circle-Pong
+* Breakout (PYGAME and GO)
+* Shogu
+* Peg-solitarie
+* **_and more games to come!_** :space_invader:
 
 ### STRUCTURE
   A main python script handle the **multiple games selection**, making it easy for expanding:
@@ -16,6 +25,13 @@
   Breakout styled game, given the stage structuring it's easy to modifiable. Planned routes of **stages made by AI** and normal. More than 10 powe-ups planned!
   *Map creator will be added soon!!*
   
-![Captura de tela 2025-02-04 205642](https://github.com/user-attachments/assets/17a0a19d-4a83-4b07-a9c3-638d8040b31c)
+![Breakout-60](https://github.com/user-attachments/assets/f9ea8446-4b19-4e56-b29c-dc6d1e2e2d26)
+#### SHOGU
+  Japanese board game! Consists in pushing opponent pieces out of the board! 
+  
+![shougu](https://github.com/user-attachments/assets/6984858f-dcee-421a-9ab0-44d7e276b81b)
 
-**_and more games to come!_** :space_invader:
+#### PEG-SOLITARIE (SOLO-NOBLE)
+  A puzzle from the XV century! 
+  
+![Captura de tela 2025-02-28 111117](https://github.com/user-attachments/assets/77469d7c-d7ab-454e-b18f-c2a7eda5f2c8)![Captura de tela 2025-02-28 111141](https://github.com/user-attachments/assets/27ef6465-74ac-4d4c-b195-336d3a64ce0b)
