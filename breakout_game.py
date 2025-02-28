@@ -586,7 +586,7 @@ while running:
         screen.fill("black")
 
         if need_build == 1:
-            player1.set_pos(WIDTH/2,player1.pos_y)
+            player1.set_pos(WIDTH/2,player1.player_pos.y)
             player1.change_size(player_size,10)
             ball_list.append(ball(screen,'white',ball_radius,fixed_start_speed = True,limit_speed=5,min_speed=3))
             fase_start_time = pygame.time.get_ticks()
