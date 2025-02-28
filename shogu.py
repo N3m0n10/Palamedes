@@ -6,6 +6,7 @@ screen = pygame.display.set_mode((WIDGHT, HEIGHT))
 pygame.display.set_caption('SHOGU')
 start_font = pygame.font.SysFont('Times New Roman', 40)
 start_text = start_font.render("WHITE START", True, "white")
+points_font = pygame.font.SysFont('Tahoma', 100)
 impossible_move_text = start_font.render("IMPOSSIBLE MOVE", True, "red")
 points = [0,0]
 
@@ -305,6 +306,14 @@ while running:
     pygame.draw.rect(screen, "brown", (340,380,300,300), border_radius=30)
     pygame.draw.rect(screen, (239,173,100), (680,380,300,300), border_radius=30)
     pygame.draw.line(screen, "black", (320,HEIGHT/2),(1000,HEIGHT/2), width=10)
+    pygame.draw.rect(screen, (10,10,10), (1040,210,150,300), border_radius=30)
+    points_text1 = points_font.render(str(points[0]), True, (250,250,250))
+    points_text2 = points_font.render("_", True, (250,250,250))
+    points_text3 = points_font.render(str(points[1]), True, (250,250,250))
+    screen.blit(points_text1,(1085,220))
+    screen.blit(points_text2,(1085,250))
+    screen.blit(points_text3,(1085,370))
+    #points text
 
     for i in range(1,4):
         pygame.draw.line(screen, (25,15,5), (i*80 + 330,50 ),(i*80 + 330, 330), width=10)
