@@ -16,7 +16,6 @@ def load_image_from_subfolder(image_name, subfolder="game_thumb"): #fix the erro
 
 ##PYGAME_SETUP---------------------------------------------
 pygame.init()
-#screen setup
 screen = pygame.display.set_mode((1280, 720))
 game_menu_surface = pygame.Surface((1280, srfc_height)) ###excell is calculated in game_menu.py
 #running and windw sets
@@ -35,13 +34,10 @@ stages_list = [0,1,2]
 estagio = 0
 players = -1
 hue = 0 
-run= 0
-#vars for game_menu  #translate to english
-# Variável de deslocamento para a rolagem
+run= 0 
+#vars for game_menu # Scroll variables
 scroll_offset = 0
-# Limite de rolagem (o máximo que a superfície pode rolar)
 scroll_limit = (srfc_height) - 720 
-# Velocidade de rolagem
 scroll_speed = 20
 ##BASE_FUNCTIONS---------------------------------------------
 def stage(estagio):
@@ -78,22 +74,21 @@ def game_menu_screen(game_list, pos_list,icon_size, excell, srfc_height,run):  #
         thb_img = []
         for i, item in enumerate(game_list): 
             recta = pygame.Rect(pos_list[i], icon_size)
-            pygame.draw.rect(game_menu_surface, 'white' ,recta)
+            pygame.draw.rect(game_menu_surface, 'white' ,recta)  ##EMPTY SPOTS FOR GAME IMAGES
             thb_img.append(load_image_from_subfolder(f'{item}_thumb_image.png'))
     screen.blit(game_menu_surface, (0, -scroll_offset))
+    #randon button
+    random_rect = pygame.Rect(790 , 5 - scroll_offset, 165, 50)
+    pygame.draw.rect(screen, 'orange' ,random_rect)
+    random_text = random_game_font.render("RANDOM", True, 'black')
+    screen.blit(random_text, (814, 10 - scroll_offset))
+    #Draw images
     for i in range(len(game_list)):
         image_pos = (pos_list[i][0], pos_list[i][1] - scroll_offset)
         screen.blit(thb_img[i], image_pos) #print the image in the rectangle
     _text = game_list_font.render("You can Scroll!!", True, 'white')
     screen.blit(_text, (10, 5 - scroll_offset))
-    random_text = random_game_font.render("RANDOM", True, 'black')
-    screen.blit(random_text, (814, 10 - scroll_offset))
-    random_rect = pygame.Rect(790, 5 , 165, 50)
-    pygame.draw.rect(game_menu_surface, 'orange' ,random_rect)
-        #FIX OFFSET FOR IMAGES
-##On click event must be created in #main #events
-#create  game icons --> clickable rectangle 
-    run = 1  #flag to check multirun --> make use
+    run = 1  #Mounting rects occours once
 ##--------------------------------------------------------------------
 while running:
     # poll for events
@@ -108,20 +103,29 @@ while running:
                 estagio = 1
 
         # Controle da rolagem usando as setas para cima e para baixo  ##not working ----> need to fix
-        elif event.type == pygame.MOUSEWHEEL:
-            if event.y < 0:  # Scroll para baixo
-                scroll_offset = min(scroll_offset + scroll_speed, scroll_limit)
-            elif event.y > 0:  # Scroll para cima
-                scroll_offset = max(scroll_offset - scroll_speed, 0)
-        
-        elif event.type == pygame.MOUSEBUTTONDOWN and stage(estagio) == "game_menu":
-            for i, item in enumerate(game_list):
-                if pygame.Rect(pos_list[i], icon_size).collidepoint(pygame.mouse.get_pos()):
-                    game = game_list[i]
-                    estagio = 2
-                elif pygame.Rect(790, 5 , 165, 50).collidepoint(pygame.mouse.get_pos()):
-                    game = random.choice(game_list)
-                    estagio = 2
+        elif stage(estagio) == "game_menu":
+            game_menu_surface.fill('black')
+            if event.type == pygame.MOUSEWHEEL:
+                if event.y < 0:  # Scroll para baixo
+                    scroll_offset = min(scroll_offset + scroll_speed, scroll_limit)
+                elif event.y > 0:  # Scroll para cima
+                    scroll_offset = max(scroll_offset - scroll_speed, 0)
+
+            for i, item in enumerate(game_list): #green selection
+                    if pygame.Rect((pos_list[i][0], pos_list[i][1] - scroll_offset), icon_size).collidepoint(pygame.mouse.get_pos()):
+                        pygame.draw.rect(game_menu_surface, 'green' ,pygame.Rect((pos_list[i][0] - 5 , pos_list[i][1] - 5), (icon_size[0] + 10,icon_size[1] + 10)),border_radius=5)
+
+            if pygame.Rect(790, 5 - scroll_offset , 165, 50).collidepoint(pygame.mouse.get_pos()): #green selection
+                pygame.draw.rect(game_menu_surface, 'green' ,pygame.Rect((785 , 0 ), (175,60)),border_radius=5)
+
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                for i, item in enumerate(game_list):
+                    if pygame.Rect((pos_list[i][0], pos_list[i][1] - scroll_offset), icon_size).collidepoint(pygame.mouse.get_pos()):
+                        game = game_list[i]
+                        estagio = 2
+                    elif pygame.Rect(790, 5 - scroll_offset , 165, 50).collidepoint(pygame.mouse.get_pos()): #randon button collision
+                        game = random.choice(game_list)
+                        estagio = 2
 
         
     # fill the screen with a color to wipe away anything from last frame
