@@ -1,4 +1,5 @@
 import pygame
+import copy 
 
 pygame.init()
 WIDGHT, HEIGHT = 1280, 720
@@ -41,7 +42,8 @@ for i in range(4):
         board.append(line_list)
     boards.append(board)
 
-initial_pos = boards.copy()
+initial_pos = copy.deepcopy(boards)  # Use deepcopy here
+initial_whites, initial_blacks = copy.deepcopy(whites),copy.deepcopy(blacks)
 
 def passive_movement(piece, destiny):
     global turn, whites, blacks, boards , impossible_move
@@ -57,62 +59,24 @@ def passive_movement(piece, destiny):
     if turn[0] == "white":  #check if the right board is choosen
         if piece[2][0] == 2 or piece[2][0] == 3:
             return False
-        #-----------------------------------
-        possible_pos = 0
-        if abs(delta_row) == 1 or abs(delta_col) == 1:
-            for h in whites:
-                prov_wht_destination = boards[h[0]][h[1]][h[2]]
-                if 0 <= h[1] < 4 and  0 <= h[2] < 4: #not out of the board
-                    if prov_wht_destination != "white": #not the same color 
-                        match prov_wht_destination:
-                            case "empty":
-                                possible_pos += 1
-                            case "black":
-                                if h[1] + 2*delta_row > 3 or h[2] + 2*delta_col > 3 or h[1] + 2*delta_row < 0 or h[2] + 2*delta_col < 0:
-                                    possible_pos += 1
-                                elif boards[h[0]][h[1] + 2*delta_row][h[2] + 2*delta_col] != "black": #check if there is more then a piece in the way
-                                    possible_pos += 1
-        else: 
-            if boards[current_board][current_row + delta_row][current_col + delta_col] != "white": #check if there is a same color in the destination
-                if boards[current_board][current_row + int(delta_row/2)][current_col + int(delta_col/2)] != "white": #check if there is a same color piece in the way 
-                    match boards[current_board][current_row + int(delta_row/2)][current_col + int(delta_col/2)]:
-                        case "empty":
-                            possible_pos += 1
-                        case "black":
-                            match boards[current_board][current_row + delta_row][current_col + delta_col]:
-                                case "empty":
-                                    possible_pos += 1
-                                case "black":
-                                    pass  #check if there is more then a piece in the way
-        #check if there is an same color piece in the way (DID BY OMISSION)
+        
     if turn[0] == "black":
         if piece[2][0] == 0 or piece[2][0] == 1:
             return False
-        possible_pos = 0
-        if abs(delta_row) == 1 or abs(delta_col) == 1:
-            for bl in blacks:
-                prov_wht_destination = boards[bl[0]][bl[1]][bl[2]]
-                if 0 <= bl[1] < 4 and  0 <= bl[2] < 4: #not out of the board
-                    if prov_wht_destination != "black": #not the same color 
-                        match prov_wht_destination:
-                            case "empty":
-                                possible_pos += 1
-                            case "white":
-                                if bl[1] + 2*delta_row > 3 or bl[2] + 2*delta_col > 3 or bl[1] + 2*delta_row < 0 or bl[2] + 2*delta_col < 0:
-                                    possible_pos += 1
-        else: 
-            if boards[current_board][current_row + delta_row][current_col + delta_col] != "black": #check if there is a same color in the destination
-                if boards[current_board][current_row + int(delta_row/2)][current_col + int(delta_col/2)] != "black": #check if there is a same color piece in the way 
-                    match boards[current_board][current_row + int(delta_row/2)][current_col + int(delta_col/2)]:
-                        case "empty":
-                            possible_pos += 1
-                        case "white":
-                            pass  #check if there is more then a piece in the way
-                        
-            if possible_pos < 1:
-                impossible_move = True
-                return False  
-
+    
+    possible_pos = 0
+    impossible_move = False
+    team = blacks if boards[current_board][current_row][current_col] == "black" else whites
+    for p in team:
+        if -1<p[1]+dest_row < 4  or\
+            -1<p[2] + dest_col < 4:
+            if attack_movement(["holder",boards[p[0]][p[1]][p[2]],p],[current_board,delta_row,delta_col],test=True):
+                possible_pos += 1
+    if possible_pos < 1:
+        impossible_move = True
+        return False  
+    
+    print(possible_pos)
     # Check if moving on the same board
     if dest_board != current_board:
         return False
@@ -137,21 +101,27 @@ def passive_movement(piece, destiny):
                 return False
 
 
+
     # Update the board and piece position
     boards[current_board][current_row][current_col] = "empty"
     boards[dest_board][dest_row][dest_col] = piece[1]
 
     # Update the piece's position in the respective list
-    team = whites if piece[1] == "white" else blacks
-    for p in team:
-        if p == [current_board, current_row, current_col]:
-            p[1], p[2] = dest_row, dest_col
-            break
+    if piece[1] == "white":
+        for p in whites:
+            if p == [current_board, current_row, current_col]:
+                p[1], p[2] = dest_row, dest_col
+                break
+    elif piece[1] == "black":
+        for p in blacks:
+            if p == [current_board, current_row, current_col]:
+                p[1], p[2] = dest_row, dest_col
+                break
 
     turn = [turn[0], "attack"]
     return [current_board,delta_row,delta_col] 
 
-def attack_movement(piece, destiny):
+def attack_movement(piece, destiny,test = False):
     global turn, whites, blacks, boards
 
     #Can't move on the same board
@@ -176,10 +146,6 @@ def attack_movement(piece, destiny):
     #check vars 2 
     checking = boards[current_board][current_row + dest_row][current_col + dest_col]
     ot_checking = boards[current_board][current_row + int(dest_row/2)][current_col + int(dest_col/2)]
-    print(int(dest_row/2),int(dest_col/2))
-    print(current_row, current_col, dest_row, dest_col)
-    print(checking,ot_checking)  ##here's the problem
-    print("op color: ", op_color)
     col_coef = 1 if dest_col > 0 else -1 
     row_coef = 1 if dest_row > 0 else -1
     if dest_row == 0:
@@ -207,92 +173,94 @@ def attack_movement(piece, destiny):
     if checking == piece[1] or (ot_checking == piece[1] and (abs(dest_row) == 2 or abs(dest_col) == 2)):
         print("same color")
         return False
-    
-    if checking == op_color:  #peça no local de destino
-        checking = "empty"
-        print("in the spot")
-        op_team = blacks if piece[1] == "white" else whites
-        if 0 > (current_row + dest_row + row_coef) \
-            or (current_row + dest_row + row_coef) > 3\
-            or 0 > (current_col + dest_col + col_coef)\
-            or (current_col + dest_col + col_coef) > 3:   #cheeck if the position thepiece is pushed exceeds the board
-            if op_team == whites:
-                for k in whites:
-                    if k == [current_board, dest_row, dest_col]:#atualiza a lista op_team --> condição de vitória
-                        whites.remove(k) #piece out of board
-                        break
-            else:
-                for k in blacks:
-                    if k == [current_board, dest_row, dest_col]:#atualiza a lista op_team --> condição de vitória
-                        blacks.remove(k) #piece out of board
-                        break
-        else:
-            if op_team == whites:
-                for k in whites:
-                    if k == [current_board, dest_row, dest_col]:
-                        k[1], k[2] = current_row + dest_row + row_coef, current_col + dest_col + col_coef
-                        break
-            else:
-                for k in blacks:
-                    if k == [current_board, dest_row, dest_col]:
-                        k[1], k[2] = current_row + dest_row + row_coef, current_col + dest_col + col_coef
-                        break
-            boards[current_board][dest_row + current_row + row_coef][dest_col + current_col + col_coef] = op_color #push piece
-        print(op_team)
-    elif ot_checking == op_color and ((int(dest_row/2),int(dest_col/2)) != (0,0)): #em caso de movimento de duas casas -> peça na primeira casa
-        ot_checking = "empty"
-        print("before the spot")
-        op_team = blacks if piece[1] == "white" else whites
-        if 0 > (current_row + dest_row + row_coef) \
-            or (current_row + dest_row + row_coef) > 3\
-            or 0 > (current_col + dest_col + col_coef)\
-            or (current_col + dest_col + col_coef) > 3:   #cheeck if the piece is pushed exceeds the board
-            if op_team == whites:
-                for k in whites:
-                    if k == [current_board, dest_row, dest_col]:#atualiza a lista op_team --> condição de vitória
-                        whites.remove(k) #piece out of board
-                        break
-            else:
-                for k in blacks:
-                    if k == [current_board, dest_row, dest_col]:#atualiza a lista op_team --> condição de vitória
-                        blacks.remove(k) #piece out of board
-                        break
-        else:
-            print("push")
-            if op_team == whites:   
-                for bk in whites:
-                    if bk == [current_board, dest_row, dest_col]:
-                        bk[1], bk[2] = current_row + dest_row + row_coef, current_col + dest_col + col_coef
-                        break
-            else:
-                for bk in blacks:
-                    if bk == [current_board, dest_row, dest_col]:
-                        bk[1], bk[2] = current_row + dest_row + row_coef, current_col + dest_col + col_coef
-                        break
-            boards[current_board][dest_row + current_row + row_coef][dest_col + current_col + col_coef] = op_color #push
-        boards[current_board][current_row + int(dest_row/2)][current_col + int(dest_col/2)] = "empty"  #place of piece in the 1st mov empty
-    print(ot_checking)
-    # Update the piece's position in the respective list
-    team = whites if piece[1] == "white" else blacks #clean exsecive variables later
-    for p in team:
-        if p == [current_board, current_row, current_col]:
-            p[1], p[2] = current_row + dest_row, current_col + dest_col
-            break
 
-    #atualize board position
-    boards[current_board][current_row][current_col] = "empty"
-    boards[current_board][dest_row + current_row][dest_col + current_col] = piece[1]
-    turn = ["black" if turn[0] == "white" else "white", "passive"]
+    if not test:
+        if checking == op_color:  #peça no local de destino
+            checking = "empty"
+            print("in the spot")
+            op_team = blacks if piece[1] == "white" else whites
+            if 0 > (current_row + dest_row + row_coef) \
+                or (current_row + dest_row + row_coef) > 3\
+                or 0 > (current_col + dest_col + col_coef)\
+                or (current_col + dest_col + col_coef) > 3:   #cheeck if the position thepiece is pushed exceeds the board
+                if op_team == whites:
+                    for k in whites:
+                        if k == [current_board, dest_row + current_row, dest_col + current_col]:#atualiza a lista op_team --> condição de vitória
+                            whites.remove(k) #piece out of board
+                            break
+                else:
+                    for k in blacks:
+                        if k == [current_board, dest_row + current_row, dest_col + current_col]:#atualiza a lista op_team --> condição de vitória
+                            blacks.remove(k) #piece out of board
+                            break
+            else:
+                if op_team == whites:
+                    for k in whites:
+                        if k == [current_board, dest_row + current_row, dest_col + current_col]:
+                            k[1], k[2] = current_row + dest_row + row_coef, current_col + dest_col + col_coef
+                            break
+                else:
+                    for k in blacks:
+                        if k == [current_board, dest_row + current_row, dest_col + current_col]:
+                            k[1], k[2] = current_row + dest_row + row_coef, current_col + dest_col + col_coef
+                            break
+                boards[current_board][dest_row + current_row + row_coef][dest_col + current_col + col_coef] = op_color #push piece
+            print(op_team)
+        elif ot_checking == op_color and ((int(dest_row/2),int(dest_col/2)) != (0,0)): #em caso de movimento de duas casas -> peça na primeira casa
+            ot_checking = "empty"  #RESET
+            print("before the spot")
+            op_team = blacks if piece[1] == "white" else whites
+            if 0 > (current_row + dest_row + row_coef) \
+                or (current_row + dest_row + row_coef) > 3\
+                or 0 > (current_col + dest_col + col_coef)\
+                or (current_col + dest_col + col_coef) > 3:   #cheeck if the piece is pushed exceeds the board
+                if op_team == whites:
+                    for k in whites:
+                        if k == [current_board,current_row + int(dest_row/2),current_col + int(dest_col/2)]:#atualiza a lista op_team --> condição de vitória
+                            whites.remove(k) #piece out of board
+                            break
+                else:
+                    for k in blacks:
+                        if k == [current_board,current_row + int(dest_row/2),current_col + int(dest_col/2)]:#atualiza a lista op_team --> condição de vitória
+                            blacks.remove(k) #piece out of board
+                            break
+            else:
+                print("push")
+                if op_team == whites:   
+                    for bk in whites:
+                        if bk == [current_board,current_row + int(dest_row/2),current_col + int(dest_col/2)]:
+                            bk[1], bk[2] = current_row + dest_row + row_coef, current_col + dest_col + col_coef
+                            break
+                else:
+                    for bk in blacks:
+                        if bk == [current_board,current_row + int(dest_row/2),current_col + int(dest_col/2)]:
+                            bk[1], bk[2] = current_row + dest_row + row_coef, current_col + dest_col + col_coef
+                            break
+                boards[current_board][dest_row + current_row + row_coef][dest_col + current_col + col_coef] = op_color #push
+            boards[current_board][current_row + int(dest_row/2)][current_col + int(dest_col/2)] = "empty"  #place of piece in the 1st mov empty
+        print(ot_checking)
+        # Update the piece's position in the respective list
+        team = whites if piece[1] == "white" else blacks #clean exsecive variables later
+        for p in team:
+            if p == [current_board, current_row, current_col]:
+                p[1], p[2] = current_row + dest_row, current_col + dest_col
+                break
+
+        #atualize board position
+        boards[current_board][current_row][current_col] = "empty"
+        boards[current_board][dest_row + current_row][dest_col + current_col] = piece[1]
+        turn = ["black" if turn[0] == "white" else "white", "passive"]
     return True
 
 
-impossible_move = False
+
 turn = ["white","passive"]
 clock = pygame.time.Clock()
 running = True
 selected_piece = None
 selected_destination = None
 first_move = True
+impossible_move = False
 while running:
     
 
@@ -398,8 +366,8 @@ while running:
         screen.blit(start_text, (50,10))
 
     if impossible_move:
-        screen.blit(impossible_move_text, (50,30))
-
+        screen.blit(impossible_move_text, (10,5))
+    
     for z in range(4):
         count = 0
         for wi in whites:
@@ -407,9 +375,13 @@ while running:
                 count += 1
         if count == 0: #BLACKS WIN
             boards = initial_pos.copy()
+            whites, blacks = initial_whites.copy(),initial_blacks.copy()
             points[1] += 1
+            selected_piece = None
+            selected_destination = None
+            first_move = True
+            impossible_move = False
             turn = ["white","passive"]
-            #bk_win
             #checkar e resetar todas as variáveis
             #mostrar texto de vitória (temporizado ou até o primeira movimento)
         count = 0
@@ -417,15 +389,17 @@ while running:
             if bc[0] == z:
                 count+= 1
         if count == 0:  #WHITES WIN
-            boards = initial_pos.copy()
+            boards = copy.deepcopy(initial_pos)
+            whites, blacks = copy.deepcopy(initial_whites),copy.deepcopy(initial_blacks)
             points[0] += 1
+            selected_piece = None
+            selected_destination = None
+            first_move = True
+            impossible_move = False
             turn = ["white","passive"]
-
-
 
     pygame.display.update()
 
     clock.tick(60)
 
 pygame.quit()
-
