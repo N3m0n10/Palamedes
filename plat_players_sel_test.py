@@ -18,6 +18,22 @@ hand_position = (WIDTH*0.3, HEIGHT*0.66)  ###initial card position
 card_pos = hand_position
 drag = False
 
+class cards:
+    def __init__(self, card,):#types #list for positioning
+        self.card = card
+        self.card_pos = hand_position
+        self.factor = factor
+
+    def resize(self):
+        pass 
+
+    def position(self):
+        pass
+
+    def draw(self):
+        screen.blit(pygame.transform.scale_by(self.card, self.factor), self.card_pos)
+        
+
 running = True
 while running:
     card_rect = card.get_rect(left=card_pos[0], top=card_pos[1])
@@ -27,8 +43,10 @@ while running:
         #for i,j in enumerate cards list --->  use index to select card
         if card_rect.collidepoint(pygame.mouse.get_pos()):
             if event.type == pygame.MOUSEBUTTONDOWN:
-                catch_time = pygame.time.get_ticks()
-                drag = not drag
+                drag = True
+            
+        if event.type == pygame.MOUSEBUTTONUP:
+            drag = False
                 
     if card_rect.collidepoint(pygame.mouse.get_pos()):
         if factor < 0.21:
