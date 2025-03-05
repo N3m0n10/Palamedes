@@ -120,6 +120,24 @@ while running:
                     pygame.display.toggle_fullscreen()  
 
         #phase button generator
+
+        clock.tick(60)
+        pygame.display.flip()
+
+    while in_phase:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                exit()
+                
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_F11:
+                    pygame.display.toggle_fullscreen() 
+
+
+        
+
+        clock.tick(60)
+        pygame.display.flip()
                 
 
     #pygame.display.update() for portion of the screen
