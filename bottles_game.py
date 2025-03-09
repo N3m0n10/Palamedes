@@ -23,6 +23,8 @@ start_text_rect = start_text.get_rect(center=(400, 300))
 r_num_text = start_text_font.render(f'{right_number}', True, (255, 255, 255))
 help_text = start_text_font.render('Use A and D to move the first hand and LEFT and RIGHT to move the second hand', True, (255, 255, 255))
 help_text_2nd = start_text_font.render('Press SPACE to change the bottles and RIGHT ENTER to check', True, (255, 255, 255))
+win_text = start_text_font.render('You win! Press SPACE to continue', True, (255, 255, 255))
+win_text_2nd = start_text_font.render('Press BACKSPACE to exit', True, (255, 255, 255))
 
 
 
@@ -42,28 +44,26 @@ class Bottle:
         self.processed_image = pygame.transform.scale(self.image, (width, height))
 
 def enemy(_bottles, _sequence):
-    for j in range(difficult):
-        choose = 0
-        drop_a_coin = randint(0, 1)
-        match drop_a_coin:  
-            case 0:
-                for b in range(len(_bottles)):
-                    if _bottles[b].color == _sequence[b]:
-                        choose = 1
-                        pointer = b
-                        pointer_2 = randint(0, 9 + difficult)
-                        while pointer_2 == pointer:
-                            pointer_2 = randint(0, 9 + difficult)
-                        break
-                if choose == 0:
-                    pointer, pointer_2 = randint(0, 9+difficult), randint(0, 9+difficult)
+    choose = 0
+    drop_a_coin = randint(0, 1)
+    match drop_a_coin:  
+        case 0:
+            for b in range(len(_bottles)):
+                if _bottles[b].color == _sequence[b]:
+                    choose = 1
+                    pointer = b
+                    pointer_2 = randint(0, 9 + difficult)
                     while pointer_2 == pointer:
-                        pointer_2 = randint(0, 9+difficult)
+                        pointer_2 = randint(0, 9 + difficult)
                     break
-            case 1:
+            if choose == 0:
                 pointer, pointer_2 = randint(0, 9+difficult), randint(0, 9+difficult)
                 while pointer_2 == pointer:
                     pointer_2 = randint(0, 9+difficult)
+        case 1:
+            pointer, pointer_2 = randint(0, 9+difficult), randint(0, 9+difficult)
+            while pointer_2 == pointer:
+                pointer_2 = randint(0, 9+difficult)
     return pointer, pointer_2
                 
 
@@ -146,6 +146,10 @@ while running:
 
         if checking:
             try:
+                run
+            except NameError:
+                run = 0
+            try:
                 wait_time
             except NameError:
                 wait_time = pygame.time.get_ticks()
@@ -158,6 +162,7 @@ while running:
                         right_number += 1
                 count = True
             if pygame.time.get_ticks() - wait_time > 3000:
+                run += 1
                 enemy(bottles, sequence)
                 old_in_pos = bottles[pointer]
                 bottles[pointer] = bottles[pointer_2]
@@ -166,7 +171,9 @@ while running:
                 for i in range(9 + difficult):
                     if bottles[i].id == sequence[i]:
                         right_number += 1
-                checking = False
+                if difficult - run == 0:
+                    checking = False
+                    run = 0
                 del wait_time
                 del count
             r_num_text = start_text_font.render(f'{right_number}', True, (255, 255, 255))
@@ -208,14 +215,19 @@ while running:
                 sc = pygame.display.set_mode((event.w, event.h), pygame.RESIZABLE)
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
+                    if difficult < 5:
+                        finish_screen = False
+                        phase = True
+                        difficult += 1
+                if event.key == pygame.K_BACKSPACE:
                     finish_screen = False
-                    phase = True
-                    difficult += 1
-                    if difficult > 5:
-                        running = False
-                        phase   = False
+                    running = False
+                    
+        
 
         sc.fill((30,30,30))
+        sc.blit(win_text, (0, height*0.5))
+        sc.blit(win_text_2nd, (0, height*0.55))
         pygame.display.update()
         clock.tick(60)
         
