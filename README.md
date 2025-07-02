@@ -1,4 +1,4 @@
-# *SUPERPONG* is a multi games plataform made with PYTHON and GO
+# *OGYGIA* is a multi games plataform made with PYTHON and GO
 
 ### FEATURING
 
