@@ -7,7 +7,9 @@ pygame.display.set_caption('Peg Solitaire')
 general_font = pygame.font.SysFont('Times New Roman', 25)
 win_text = general_font.render("WIN!", True, (90, 100, 240))
 reset_text = general_font.render("RESET", True, "orange")
+move_error_text = general_font.render("Select the piece to move and the piece jumped!", True, "orange")
 
+move_error = False
 initial_positions = []
 for i in range(7):
     line = []
@@ -26,37 +28,39 @@ def move_piece(fst,scd):
     global positions
     global selected_piece
     global second_selected_piece
+    global move_error
     fst_x, fst_y = (fst[0]-44)//80, (fst[1]-44)//80
     scd_x, scd_y = (scd[0]-44)//80 , (scd[1]-44)//80
     print(fst_x, fst_y, scd_x, scd_y)
     if positions[scd_x][scd_y] or positions[fst_x][fst_y] != ["empty"]:
-        print("eaaaaaaaaaaaaaaaaaaa")
         if (fst_x == scd_x) and (fst_y == (scd_y + 1)):
             if scd_y  > 0:
-                print("abbbbbbbbbbbb")
                 if positions[scd_x][scd_y-1] == ["empty"]:
                     positions[fst_x][fst_y] = ["empty"]
                     positions[scd_x][scd_y] = ["empty"]
                     positions[scd_x][scd_y-1] = ["occupied"]
-                    print("a")
+                else: move_error = True
         elif (fst_x == scd_x) and (fst_y == (scd_y - 1)):
             if scd_y  < 6:
                 if positions[scd_x][scd_y+1] == ["empty"]:
                     positions[fst_x][fst_y] = ["empty"]
                     positions[scd_x][scd_y] = ["empty"]
                     positions[scd_x][scd_y+1] = ["occupied"]
+                else: move_error = True
         elif (fst_x == (scd_x + 1)) and (fst_y == scd_y):
             if scd_x > 0:
                 if positions[scd_x-1][scd_y] == ["empty"]:
                     positions[fst_x][fst_y] = ["empty"]
                     positions[scd_x][scd_y] = ["empty"]
                     positions[scd_x-1][scd_y] = ["occupied"]
+                else: move_error = True
         elif (fst_x == (scd_x - 1)) and (fst_y == scd_y):
             if scd_x <6:
                 if positions[scd_x+1][scd_y] == ["empty"]:
                     positions[fst_x][fst_y] = ["empty"]
                     positions[scd_x][scd_y] = ["empty"]
                     positions[scd_x+1][scd_y] = ["occupied"]
+                else: move_error = True
     selected_piece = None
     second_selected_piece = None
 
@@ -111,7 +115,7 @@ while running:
                 second_selected_piece = None
                 selected_piece = None
                 del positions
-                positions = copy.deepcopy(initial_positions) ###TODO
+                positions = copy.deepcopy(initial_positions) 
 
 ##################################################################events
 
@@ -122,6 +126,8 @@ while running:
         pygame.draw.circle(screen, "green", selected_piece.center, 17,1)
     if second_selected_piece is not None:
         pygame.draw.circle(screen, "green", second_selected_piece.center, 17,1)
+    if move_error:
+        screen.blit(move_error_text, (45,250))
     
     
     
