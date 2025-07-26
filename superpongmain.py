@@ -59,13 +59,11 @@ def stage(estagio):
 def menu_screen(color):    #---------De preferência ransformar num objeto, dentro de stage
     texto_menu = menu_font.render('Press Space', True, color)
     screen.blit(background, (0, 0))  #screen.blit(background_main_menu, (0, 0))
-    screen.blit(texto_menu, (450,600))
-
+    return texto_menu.get_rect(center=(screen.get_width()//2, screen.get_height()*(7/8))) , texto_menu  # Center the text on the screen
 
 def changeColor(hue):
         color = colorsys.hsv_to_rgb(hue,1,1)
         return (color[0]*255,color[1]*255,color[2]*255)
-
 
 ##game_menu-----------------------------------------
 
@@ -95,8 +93,7 @@ while running:
     # pygame.QUIT event means the user clicked X to close your window
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            running = False
-        
+            running = False        
 
         elif event.type == pygame.KEYDOWN and stage(estagio) == "menu":  #usar pygame.key.get_pressed()
             if event.key == pygame.K_SPACE:    
@@ -126,10 +123,7 @@ while running:
                     elif pygame.Rect(790, 5 - scroll_offset , 165, 50).collidepoint(pygame.mouse.get_pos()): #randon button collision
                         game = random.choice(game_list)
                         estagio = 2
-
-        
-    # fill the screen with a color to wipe away anything from last frame
-    screen.fill("White")
+    
     stage(estagio)
     
     ##CHAMADAS---------------------------------------------
@@ -139,10 +133,14 @@ while running:
             hue = 0
         hue += 0.005
         cor = changeColor(hue)
-        menu_screen(cor)
+        start_rect, press_start = menu_screen(cor)
+        screen.blit(press_start, start_rect)  # Draw the text on the screen
+        pygame.display.update((200, 300, 880, 200)) # Update only the menu area
+        pygame.display.update((start_rect)) # Update the start text area
 
     if stage(estagio) == "game_menu": 
         game_menu_screen(game_list, pos_list,icon_size, excell, srfc_height, run)
+        pygame.display.flip()
 
     if stage(estagio) == "fase": #will be renamed and triggered by game_menu
         ruunning = False
@@ -150,15 +148,9 @@ while running:
         try:
             with open(f"{game}.py", "r") as file:  #change to import lib ---> change pong for no self imports
                 exec(file.read())  ##"__name__": ""
-            
-                
         except: 
             print('error - game does not exist')
-            #raise FileNotFoundError("Game not found")
-        continue  #fix pygame display error 
-
-    # flip() the display to put your work on screen
-    pygame.display.flip()  
+            #raise FileNotFoundError("Game not found")       
 
     clock.tick(60)  # limits FPS to 60
 
