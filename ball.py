@@ -2,6 +2,7 @@ import pygame
 import math
 import colorsys
 import random
+from collections import deque
 
 class ball():
 
@@ -11,6 +12,8 @@ class ball():
         self.color = color
         self.radius = radius
         self.collide_border = False
+        self.clear_margin = 50  # trail cleaning
+        self.trail_positions = deque(maxlen=7) # Store last few positions
 
         if fixed_start_speed:
             self.ball_vel_x = random.randint(min_speed,limit_speed)
@@ -105,3 +108,13 @@ class ball():
     def move_to(self,pos_x,pos_y):
         self.player_pos.x = pos_x
         self.player_pos.y = pos_y
+
+    def update(self):
+        # Add current position to trail
+        self.trail_positions.append(self.rect.copy())
+
+        # Clear all trail positions (with margin)
+        for pos in self.trail_positions:
+            pygame.display.update(pos.inflate(self.clear_margin, self.clear_margin))
+
+        pygame.display.update(self.rect)
