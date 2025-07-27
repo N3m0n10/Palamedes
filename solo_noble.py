@@ -31,7 +31,6 @@ def move_piece(fst,scd):
     global move_error
     fst_x, fst_y = (fst[0]-44)//80, (fst[1]-44)//80
     scd_x, scd_y = (scd[0]-44)//80 , (scd[1]-44)//80
-    print(fst_x, fst_y, scd_x, scd_y)
     if positions[scd_x][scd_y] or positions[fst_x][fst_y] != ["empty"]:
         if (fst_x == scd_x) and (fst_y == (scd_y + 1)):
             if scd_y  > 0:
@@ -128,16 +127,9 @@ while running:
         pygame.draw.circle(screen, "green", second_selected_piece.center, 17,1)
     if move_error:
         screen.blit(move_error_text, (45,250))
-    
-    
-    
 
     pygame.display.flip()
     clock.tick(60)
     rects = []
 
-pygame.quit()
-
-
-
-        
+pygame.quit()        

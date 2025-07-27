@@ -763,7 +763,7 @@ while running:
         screen.fill("black")
         final_screen()
         pygame.display.flip()
-        clock.tick(60)
+        clock.tick(30)
         
     while leaderboard:
         for event in pygame.event.get():
@@ -775,7 +775,7 @@ while running:
                               #TODO: add leaderboard stats to txt file
         #leaderboard_screen
         pygame.display.flip() #since the result is static --> move display to a try: except, for just one randering!
-        clock.tick(60)
+        clock.tick(30)
 
     
         

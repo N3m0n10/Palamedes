@@ -1,7 +1,6 @@
 import pygame 
 from ball import ball
 from math import atan2, pi , sqrt
-import placar
 from random import randint
 
 ###PYGAME SETUP
@@ -82,6 +81,16 @@ class arc_player():
         pygame.draw.arc(self.screen,self.color , self.rect,self.last_ang,self.last_ang+pi/4,10) #change second angle in the future #make bonus itens, etc
         
         return self.last_ang, self.last_ang+pi/4
+    
+def placar(screen, pontos_1 , pontos_2, pos_1 = (380,100), pos_2 = (900,100)): #make arg
+    text_placar_font = pygame.font.SysFont('tahoma', 100) 
+    text_placar1 = text_placar_font.render(f'{pontos_1}', True, ('White'))
+    text_placar2 = text_placar_font.render(f'{pontos_2}', True, ('White'))
+    screen.blit(text_placar1,pos_1)
+    screen.blit(text_placar2,pos_2)
+    p1_points_rect = text_placar1.get_rect(topleft = pos_1)
+    op_points_rect = text_placar1.get_rect(topleft = pos_2)
+    return p1_points_rect , op_points_rect
     
     
 def is_ball_in_arc(ball_angle, start_ang, end_ang):
@@ -179,7 +188,7 @@ while runing:
             
         
         screen.fill("black")
-        placar.placar(screen,points[0],points[1],(200,200),(520,200))
+        placar(screen,points[0],points[1],(200,200),(520,200))
 
         if win == False:
             p1_ang = player1.arc_atualize(dt , ball1.player_pos.y , ball1.player_pos.x)

@@ -1,6 +1,6 @@
 import pygame 
 import colorsys
-from game_menu import excell, surface_size , game_list, icon_size, srfc_height, pos_list
+from game_menu import excell, game_list, icon_size, srfc_height, pos_list
 import os
 import random
 
@@ -152,9 +152,6 @@ while running:
             print('error - game does not exist')
             #raise FileNotFoundError("Game not found")       
 
-    clock.tick(60)  # limits FPS to 60
+    clock.tick(60) 
 
 pygame.quit()
-
-
-
