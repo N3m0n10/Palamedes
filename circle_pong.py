@@ -1,7 +1,7 @@
-import pygame 
+import pygame
 from ball import ball
 from math import atan2, pi , sqrt
-from random import randint
+from random import randint, random
 
 ###PYGAME SETUP
 pygame.init()
@@ -148,10 +148,6 @@ def winning_screen(t_winner):
 player1 = arc_player(screen, player1_color , recta,1)
  
 
-
-
-
-
 ###LOOP
 runing = True
 game = False
@@ -224,27 +220,43 @@ while runing:
                             ball_angle += 2 * pi  # Ensure the angle is in [0, 2*pi]
                         match is_ball_in_arc(ball_angle, p1_ang[0], p1_ang[1]):
                             case True:
-                                random_vel_factor = randint(-2,2) ######PROVISORY######
+                                # Define o estado do jogo (quem tocou, cooldown, cor da bola)
+                                random_vel_x = random() * 2
+                                random_vel_y = 2 - random_vel_x
                                 colide = 0
                                 touch_token = 15
-                                normal = [dx / distance, dy / distance]
-                                dot_product = ball1.ball_vel_x * normal[0] + ball1.ball_vel_y * normal[1]
-                                ball1.ball_vel_x = ball1.ball_vel_x - 2 * dot_product * normal[0] + random_vel_factor
-                                ball1.ball_vel_y = ball1.ball_vel_y - 2 * dot_product * normal[1] + random_vel_factor
                                 ball1.chose_color(player1_color)
+
+                                velocity_vec = pygame.Vector2(ball1.ball_vel_x, ball1.ball_vel_y)
+                                normal_vec = pygame.Vector2(dx, dy).normalize()
+                                reflected_vel = velocity_vec.reflect(normal_vec)
+
+                                if reflected_vel.length() < ball_max_speed:
+                                    reflected_vel.scale_to_length(reflected_vel.length() + 0.2)
+
+                                ball1.ball_vel_x = reflected_vel.x * random_vel_x
+                                ball1.ball_vel_y = reflected_vel.y * random_vel_y
+
                         match is_ball_in_arc(ball_angle, p2_ang[0], p2_ang[1]):
                             case True:
-                                random_vel_factor = randint(-2,2) ######PROVISORY######
+                                random_vel_x = random() * 2
+                                random_vel_y = 2 - random_vel_x
                                 colide = 1
                                 touch_token = 15
                                 ball1.chose_color(opponent_color[players])
-                                normal = [dx / distance, dy / distance]
-                                dot_product = ball1.ball_vel_x * normal[0] + ball1.ball_vel_y * normal[1]
-                                ball1.ball_vel_x = ball1.ball_vel_x - 2 * dot_product * normal[0] + random_vel_factor
-                                ball1.ball_vel_y = ball1.ball_vel_y - 2 * dot_product * normal[1] + random_vel_factor
 
-                
+                                velocity_vec = pygame.Vector2(ball1.ball_vel_x, ball1.ball_vel_y)
+                                normal_vec = pygame.Vector2(dx, dy).normalize()
+                                reflected_vel = velocity_vec.reflect(normal_vec)
 
+                                if reflected_vel.length() < ball_max_speed:
+                                    reflected_vel.scale_to_length(reflected_vel.length() + 0.2)
+
+                                ball1.ball_vel_x = reflected_vel.x * random_vel_x
+                                ball1.ball_vel_y = reflected_vel.y * random_vel_y
+
+                                #ball1.ball_vel_x = ball1.ball_vel_x - 2 * dot_product * normal[0] + random_vel_factor  # [old_ver]
+                                #ball1.ball_vel_y = ball1.ball_vel_y - 2 * dot_product * normal[1] + random_vel_factor
 
             #if sqrt(ball1.player_pos.y**2 + ball1.player_pos.x**2) is in  p1_pos_list:
                 

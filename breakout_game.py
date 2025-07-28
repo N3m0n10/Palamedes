@@ -167,7 +167,7 @@ def timer(fase_time):
 def score(): #unsure if this will be used
     pass
 
-def game_over(input): #input ix flexable for each situation  
+def game_over(input): #input is flexable for each situation  
     global ending_screen
     global result
     global phase
@@ -201,7 +201,7 @@ def end_fase(list_of_blocks,all_blocks):
         clean_blocks(all_blocks) 
         courrent_fase += 1
         need_build = 1
-        print("ae")
+        print("end_fase")
         phase = False
         interlude = True
 
@@ -582,6 +582,10 @@ while running:
             if event.type == pygame.QUIT: 
                 phase = False
                 running = False
+            #NOTE: DEV -- jump phase -- exclude for build
+            elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_p:
+                        end_fase([0,0,0],blocks_list)
 
         screen.fill("black")
 
