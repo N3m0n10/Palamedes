@@ -3,6 +3,7 @@ import colorsys
 from game_menu import excell, game_list, icon_size, srfc_height, pos_list
 import os
 import random
+from teste_yuri import Yuri
 
 base_dir = os.path.dirname(os.path.abspath(__file__)) # Get the directory of the current script
 def load_image_from_subfolder(image_name, subfolder="game_thumb"): #fix the error alert
@@ -15,17 +16,20 @@ def load_image_from_subfolder(image_name, subfolder="game_thumb"): #fix the erro
     
 
 ##PYGAME_SETUP---------------------------------------------
+WIDTH, HEIGHT = 1280, 720 
 pygame.init()
-screen = pygame.display.set_mode((1280, 720))
-game_menu_surface = pygame.Surface((1280, srfc_height)) ###excell is calculated in game_menu.py
+screen = pygame.display.set_mode((WIDTH, HEIGHT))
+game_menu_surface = pygame.Surface((WIDTH, srfc_height)) ###excell is calculated in game_menu.py
 #running and windw sets
 pygame.display.set_caption('PONG')
 clock = pygame.time.Clock()
 running = True
 icon_name = pygame.image.load('icon_name.jfif').convert()   
 pygame.display.set_icon(icon_name)  #----> criar icône 
+yuri = Yuri(screen, WIDTH, HEIGHT)
 ##UNIVERSAL_VAR-------------------------------------------------
-menu_font = pygame.font.SysFont('Comic Sans MS', 70)    #----->fazer função cria texto
+#print(pygame.font.get_fonts()) see fonts
+menu_font = pygame.font.SysFont('z003', 70)    #----->fazer função cria texto
 game_list_font = pygame.font.SysFont('Tahoma', 40)
 random_game_font = pygame.font.SysFont('Tahoma', 30)
 background = load_image_from_subfolder('background_main_menu.png',subfolder= "general_images")
@@ -57,7 +61,7 @@ def stage(estagio):
 
 ##menu-----------------------------------------
 def menu_screen(color):    #---------De preferência ransformar num objeto, dentro de stage
-    texto_menu = menu_font.render('Press Space', True, color)
+    texto_menu = menu_font.render('PRESS SPACE', True, color)
     screen.blit(background, (0, 0))  #screen.blit(background_main_menu, (0, 0))
     return texto_menu.get_rect(center=(screen.get_width()//2, screen.get_height()*(7/8))) , texto_menu  # Center the text on the screen
 
@@ -67,7 +71,7 @@ def changeColor(hue):
 
 ##game_menu-----------------------------------------
 
-def game_menu_screen(game_list, pos_list,icon_size, excell, srfc_height,run):  #exclude unused vars
+def game_menu_screen(game_list, pos_list,icon_size,run):  #exclude unused vars
     if run == 0:
         thb_img = []
         for i, item in enumerate(game_list): 
@@ -133,13 +137,12 @@ while running:
             hue = 0
         hue += 0.005
         cor = changeColor(hue)
-        start_rect, press_start = menu_screen(cor)
-        screen.blit(press_start, start_rect)  # Draw the text on the screen
-        pygame.display.update((200, 300, 880, 200)) # Update only the menu area
-        pygame.display.update((start_rect)) # Update the start text area
+        start_rect, press_start = menu_screen(cor)  
+        yuri.run(clock)
+        screen.blit(press_start, start_rect)
 
     if stage(estagio) == "game_menu": 
-        game_menu_screen(game_list, pos_list,icon_size, excell, srfc_height, run)
+        game_menu_screen(game_list, pos_list,icon_size, run)
         pygame.display.flip()
 
     if stage(estagio) == "fase": #will be renamed and triggered by game_menu
@@ -152,6 +155,7 @@ while running:
             print('error - game does not exist')
             #raise FileNotFoundError("Game not found")       
 
+    pygame.display.flip()
     clock.tick(60) 
 
 pygame.quit()
