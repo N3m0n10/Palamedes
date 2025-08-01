@@ -1,0 +1,1 @@
+"""Extra game. Similar to grab, here you have to protect distracted people from rain and falling objects"""

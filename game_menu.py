@@ -1,5 +1,5 @@
 #create game list
-game_list = ["pong_game", "circle_pong", "breakout_game", 'bomber_brick', 'solid_pong_game', 'solo_noble', '7', "8"]   #add random mode
+game_list = ["pong_game", "circle_pong", "breakout_game", 'bomber_brick', 'solid_pong_game', 'solo_noble', 'bottles_game', "8"]  
 num_games = len(game_list )-1 #desconsider the easter egg
 #set icons size and position
 icon_size = (300, 200)
