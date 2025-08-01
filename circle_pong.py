@@ -14,7 +14,6 @@ select_player_text = s_p_font.render("Press 0 for 1p or 1 for 2p", True, (90, 10
 
 ###VARS SETUP
 touch_token = 0
-dt = 0
 ball_min_speed = 3
 ball_max_speed = 13
 ball_radius = 20  #y_side
@@ -49,15 +48,9 @@ class arc_player():
             self.last_ang = 0
 
     ###REMAKING THE MOVE SINCE THE INCOMPATIBILITY --- UNNEDED FOR UNRESTRICTED MOVESET
-    def arc_move(self, movement_keys ,  keys, dt, ball_pos_y , ball_pos_x):
+    def arc_move(self, movement_keys ,  keys, clock, ball_pos_y , ball_pos_x):
         ##BOT config --- TO BE DONE
-        #if self.player_num == 0:
-            #if self.player_pos.y > ball_pos_y and ball_pos_x < self.player_pos.x:
-            #    self.player_pos.y -= 900 *dt
-            #elif self.player_pos.y < ball_pos_y and ball_pos_x < self.player_pos.x:
-            #    self.player_pos.y += 900 *dt
-        
-        ##PLAYERS MOVE --- RESTRICTED TO VERTICAL    
+         
     #CHANGE TO ELSE:
         if self.player_num != 0:
             if keys[movement_keys[0]]:  
@@ -68,14 +61,8 @@ class arc_player():
             self.last_ang -= 2*pi
         elif self.last_ang < 0:
             self.last_ang += 2*pi
-            #if keys[movement_keys[2]]:
-            #    self.player_pos.x -= 600 *dt
-            #if keys[movement_keys[3]]:
-            #    self.player_pos.x += 600 *dt
 
- 
-
-    def arc_atualize(self,dt ,ball_pos_y , ball_pos_x ): #---> make function to cange the angle of the draw per move
+    def arc_atualize(self,dt ,ball_pos_y , ball_pos_x ): 
         keys = pygame.key.get_pressed()
         self.arc_move( self.movement_keys[self.player_num], keys, dt, ball_pos_y, ball_pos_x)
         pygame.draw.arc(self.screen,self.color , self.rect,self.last_ang,self.last_ang+pi/4,10) #change second angle in the future #make bonus itens, etc
@@ -97,9 +84,8 @@ def is_ball_in_arc(ball_angle, start_ang, end_ang):
     if start_ang < end_ang:
         return start_ang <= ball_angle <= end_ang
     else:
-        # Handle the case where the arc wraps around (e.g., from 350° to 10°)
-        return ball_angle >= start_ang or ball_angle <= end_ang
-
+        #return ball_angle >= start_ang or ball_angle <= end_ang
+        return  start_ang >=  ball_angle >= end_ang
 
 def score(points_,colide_,max_points_,cld_brder):  #fix vars
     global colide
@@ -137,7 +123,7 @@ def handle_collision(player_hit, ball1, dx, dy, ball_max_speed, player_color, op
 
 def return_to_start_pos():
     ball1.chose_color(ball_start_color)
-    ball1.atualize(dt, (WIDTH, HEIGHT), True,[360,360])
+    ball1.atualize(clock, (WIDTH, HEIGHT), True,[360,360])
     global wait
     global time_restart
     time_restart = pygame.time.get_ticks() #start timer-
@@ -164,8 +150,6 @@ def winning_screen(t_winner):
     screen.blit(finish_text, (20,500))
     screen.blit(finish_text_ln_2, (20,600))
     
-    
-
 
 ###PLAYERS SETUP --- CHECK IF MULTIPLAYER OR VS BOT
 player1 = arc_player(screen, player1_color , recta,1)
@@ -210,8 +194,8 @@ while runing:
         placar(screen,points[0],points[1],(200,200),(520,200))
 
         if win == False:
-            p1_ang = player1.arc_atualize(dt , ball1.player_pos.y , ball1.player_pos.x)
-            p2_ang = opponent.arc_atualize(dt, ball1.player_pos.y , ball1.player_pos.x) 
+            p1_ang = player1.arc_atualize(clock , ball1.player_pos.y , ball1.player_pos.x)
+            p2_ang = opponent.arc_atualize(clock, ball1.player_pos.y , ball1.player_pos.x) 
             
 
             ###Pause from ball exit
@@ -219,7 +203,7 @@ while runing:
                 match next_ball_vel:
                     case [0,0]:
                         next_ball_vel = [randint(-ball_max_speed,ball_max_speed),randint(-ball_max_speed,ball_max_speed)]
-                ball1.atualize(dt, (WIDTH, HEIGHT), True,[360,360])
+                ball1.atualize(clock, (WIDTH, HEIGHT), True,[360,360])
                 actual_ticks = pygame.time.get_ticks()
                 text = win_font.render("PREPARE", True, "white")
                 pygame.draw.line(screen, "RED", (360, 360), (360 + 2*next_ball_vel[0], 360 + 2*next_ball_vel[1]), 5)
@@ -227,7 +211,7 @@ while runing:
                 if actual_ticks - time_restart >= 3000:
                     wait = False
             else:
-                ball1.atualize(dt, (WIDTH, HEIGHT),ball_should_not_stop=[True,next_ball_vel[0],next_ball_vel[1]])
+                ball1.atualize(clock, (WIDTH, HEIGHT),ball_should_not_stop=[True,next_ball_vel[0],next_ball_vel[1]])
                 next_ball_vel = [0,0] 
 
             ##collision
@@ -274,6 +258,6 @@ while runing:
 
 
         pygame.display.flip()
-        dt = clock.tick(60) / 1000
+        clock.tick(60)
 
 pygame.quit()

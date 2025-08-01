@@ -17,7 +17,8 @@ if __name__ == "__main__":  #make online
 #######create board 
 #four boards, each one a list at the main list
 #######passive movement
-#any direction (even diagonal) is valid, dont move others pieces
+#any direction (even diagonal) is valid, don't move others pieces
+#must use boards in your size
 #######atack movement
 #cant move two opponents pieces
 #######win condition
@@ -42,21 +43,19 @@ for i in range(4):
         board.append(line_list)
     boards.append(board)
 
-initial_pos = copy.deepcopy(boards)  # Use deepcopy here
+initial_pos = copy.deepcopy(boards)  
 initial_whites, initial_blacks = copy.deepcopy(whites),copy.deepcopy(blacks)
 
 def passive_movement(piece, destiny):
     global turn, whites, blacks, boards , impossible_move
 
-    # Extract current and destination positions
     current_board, current_row, current_col = piece[2]
     dest_board, dest_row, dest_col = destiny[2]
 
-    # Calculate move delta
     delta_row = dest_row - current_row
     delta_col = dest_col - current_col
     
-    if turn[0] == "white":  #check if the right board is choosen
+    if turn[0] == "white": 
         if piece[2][0] == 2 or piece[2][0] == 3:
             return False
         
@@ -77,19 +76,16 @@ def passive_movement(piece, destiny):
         return False  
     
     print(possible_pos)
-    # Check if moving on the same board
+    
     if dest_board != current_board:
         return False
 
-    # Check if move exceeds 2 squares in any direction
     if abs(delta_row) > 2 or abs(delta_col) > 2 or abs(delta_row) + abs(delta_col) == 3:
         return False
 
-    # Check if destination is empty
     if boards[dest_board][dest_row][dest_col] != "empty":
         return False
 
-    # Check path for moves larger than 1 square
     steps = max(abs(delta_row), abs(delta_col))
     if steps > 1:
         step_r = delta_row // steps
@@ -101,12 +97,9 @@ def passive_movement(piece, destiny):
                 return False
 
 
-
-    # Update the board and piece position
     boards[current_board][current_row][current_col] = "empty"
     boards[dest_board][dest_row][dest_col] = piece[1]
 
-    # Update the piece's position in the respective list
     if piece[1] == "white":
         for p in whites:
             if p == [current_board, current_row, current_col]:
@@ -124,18 +117,14 @@ def passive_movement(piece, destiny):
 def attack_movement(piece, destiny,test = False):
     global turn, whites, blacks, boards
 
-    #Can't move on the same board
     if piece[2][0] == destiny[0]:
         print("same board")
         return False
     
-    #out of the board
     if 0 > destiny[1] + piece[2][1] or 0 > destiny[2] + piece[2][2] or 3 < destiny[1] + piece[2][1] or 3 < destiny[2] + piece[2][2]:
         print("out of the board")
         return False
     
-    
-    #Checking variables
     if piece[1] == "white":
         op_color = "black"
     else:
@@ -143,7 +132,6 @@ def attack_movement(piece, destiny,test = False):
     current_board, current_row, current_col = piece[2]
     dest_board, dest_row, dest_col = destiny  #this is the deslocament and previous board (NOT DESTINY)
 
-    #check vars 2 
     checking = boards[current_board][current_row + dest_row][current_col + dest_col]
     ot_checking = boards[current_board][current_row + int(dest_row/2)][current_col + int(dest_col/2)]
     col_coef = 1 if dest_col > 0 else -1 
@@ -169,20 +157,20 @@ def attack_movement(piece, destiny,test = False):
             print("two pieces, posterior piece case")
             return False
         
-    #can't move same color
+    # can't move same color
     if checking == piece[1] or (ot_checking == piece[1] and (abs(dest_row) == 2 or abs(dest_col) == 2)):
         print("same color")
         return False
 
     if not test:
-        if checking == op_color:  #peça no local de destino
+        if checking == op_color:  # piece in destiny
             checking = "empty"
             print("in the spot")
             op_team = blacks if piece[1] == "white" else whites
             if 0 > (current_row + dest_row + row_coef) \
                 or (current_row + dest_row + row_coef) > 3\
                 or 0 > (current_col + dest_col + col_coef)\
-                or (current_col + dest_col + col_coef) > 3:   #cheeck if the position thepiece is pushed exceeds the board
+                or (current_col + dest_col + col_coef) > 3:   #cheeck if the position the piece is pushed exceeds the board
                 if op_team == whites:
                     for k in whites:
                         if k == [current_board, dest_row + current_row, dest_col + current_col]:#atualiza a lista op_team --> condição de vitória

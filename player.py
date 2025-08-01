@@ -58,7 +58,7 @@ class player():
     def atualize(self,dt, tela:tuple,player_num ,ball_pos_y = None , ball_pos_x = None):
         keys = pygame.key.get_pressed()
 
-        if self.format == "rect":
+        if self.format == "rect":  ## TODO: Problably tried using for arc_pong, check and delete
             self.move( self.movement_keys[self.player_num], keys, dt, player_num, ball_pos_y, ball_pos_x )
         
         #BORDAS_X
@@ -76,7 +76,7 @@ class player():
         self.rect.y = self.player_pos.y
         #DESENHA O PLAYER
         if self.format == "rect":
-            pygame.draw.rect(self.screen,self.color , [self.player_pos.x, self.player_pos.y , self.size_x, self.size_y])
+            pygame.draw.rect(self.screen,self.color , self.rect)
 
     def change_size(self, size_x, size_y):
         self.rect.width = size_x   #inflate() and other methods # -> https://www.pygame.org/docs/ref/rect.html

@@ -1,7 +1,8 @@
 import pygame 
 import colorsys
-from game_menu import excell, game_list, icon_size, srfc_height, pos_list
+from game_menu import game_list, icon_size, srfc_height, pos_list
 import os
+import sys
 import random
 from teste_yuri import Yuri
 
@@ -121,10 +122,10 @@ while running:
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 for i, item in enumerate(game_list):
-                    if pygame.Rect((pos_list[i][0], pos_list[i][1] - scroll_offset), icon_size).collidepoint(pygame.mouse.get_pos()):
+                    if pygame.Rect((pos_list[i][0], pos_list[i][1] - scroll_offset), icon_size).collidepoint(pygame.mouse.get_pos()):# NOTE:triggering on scroll --> FIX
                         game = game_list[i]
                         estagio = 2
-                    elif pygame.Rect(790, 5 - scroll_offset , 165, 50).collidepoint(pygame.mouse.get_pos()): #randon button collision
+                    elif pygame.Rect(790, 5 - scroll_offset , 165, 50).collidepoint(pygame.mouse.get_pos()): #random button collision 
                         game = random.choice(game_list)
                         estagio = 2
     
@@ -153,9 +154,13 @@ while running:
                 exec(file.read())  ##"__name__": ""
         except: 
             print('error - game does not exist')
-            #raise FileNotFoundError("Game not found")       
+            #raise FileNotFoundError("Game not found")     
+        pygame.quit()
+        sys.exit()
+              
 
     pygame.display.flip()
     clock.tick(60) 
-
+    
 pygame.quit()
+sys.exit()

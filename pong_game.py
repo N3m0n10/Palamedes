@@ -15,13 +15,14 @@ victory= pygame.mixer.Sound('assets/sounds/victory.mp3')
 p_snd = True  #limitate sound playtime
 #fps
 clock = pygame.time.Clock()
+clock_fps = 60
 dt = 0
 pontos_1, pontos_2 = 0 , 0
 #------------
 touch_token = 0
 ball_max_speed_y = 20
 ball_radius = 20
-player_size = 150  #y_side
+player_size = 150  #y_side    ## TOTALLY UNNEDED #TODO: PROCURAR POR REDUNDANCIAS E ERROS DE DESIGN COMO ESSE!!!!
 player_half_size = player_size/2
 player1 = player(screen, 'blue' , 20, player_size , 180,1,"rect")
 ball1 = ball(screen,'red',ball_radius)
@@ -59,27 +60,18 @@ class FPS:
     def __init__(self,clock):
         self.font = pygame.font.SysFont('arial', 20) 
         self.value = "init"
-        self.text = self.font.render(f'{self.value}')
-        self.rect = self.text.get_rect(0,20,20,20)
+        self.text = self.font.render(f'{self.value}',True,'White')
+        self.rect = self.text.get_rect()
         self.clock = clock
 
     def display(self,valid,surf):
         if valid:
-            self.text = clock.get_fps
+            self.value = clock.get_fps()
+            self.text = self.font.render(f'{self.value:.0f}',True,'White')
             surf.blit(self.text)
             pygame.display.update(self.rect)
 
-class FPS:
-    def __init__(self, clock): 
-        self.clock = clock
-    
-    def display(self, valid):
-        """Display the FPS counter if show is True"""
-        if valid:
-            pygame.display.set_caption(f"FPS: {round(clock.get_fps(), 1)}")
-
 fps = FPS(clock)
-
 
 win_font = pygame.font.SysFont('Comic Sans MS', 70)    #----->fazer função cria texto
 finish_text = win_font.render("Press SPACE to EXIT", True, (90, 100, 240))
@@ -120,7 +112,7 @@ while running:
         screen.fill((0, 0, 0))
         screen.blit(choose_player_text, (50, 240))
         pygame.display.flip()  # Or use pygame.display.update(choose_player_text.get_rect(topleft=(50, 240))) for partial update
-        clock.tick(60)
+        clock.tick(20) # slower framerate
         
       
     while game:
@@ -141,10 +133,8 @@ while running:
                     show_fps = not show_fps
 
                 
-        # fill the screen with a color to wipe away anything from last frame
-        screen.fill("black")      
-
-        fps.display(show_fps)        
+        # Clean 
+        screen.fill("black")            
 
         if not win(pontos_1,pontos_2,p_snd )[1]:
             #Bola
@@ -212,6 +202,7 @@ while running:
             ball1.update()
             pygame.display.update((player1.posit_x -5,0,player_size + 5, HEIGHT))
             pygame.display.update((opponent.posit_x -5,0,player_size + 5, HEIGHT))
+            fps.display(show_fps,screen)  
 
         #win
         if win(pontos_1,pontos_2, p_snd)[1]:
@@ -225,6 +216,6 @@ while running:
         # limits FPS to 60
         # dt is delta time in seconds since last frame, used for framerate-
         # independent physics.
-        dt = clock.tick(60) / 1000
+        dt = clock.tick(clock_fps) / 1000
 
 pygame.quit()
