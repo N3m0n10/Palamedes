@@ -5,7 +5,6 @@ import pygame
 class button():
     def __init__(self,x,y,size:tuple,color,width = 0, border_radius = 0, text = None, font = 'Arial', font_size = 10,text_color = 'White'):
         # TODO: add multiple pos and size input option
-        pygame.init()
 
         self.color = color
         self.start_pos = (x,y) 
@@ -52,4 +51,56 @@ class button():
 class Sprite_button(pygame.sprite.Sprite):
     def __init__(self,image,pos,scale):
         pygame.sprite.Sprite.__init__(self)
+        pass
+
+class Text():
+    """Each line (for starter) will be dvivided into each character with"""
+    """it's own surface. That way text can be easely moved, transformed """
+    """and turned into a object of the game, adding astistic enphase or """
+    """game design liberty"""
+    def __init__(self,text,pos:tuple,font,font_size,color,mouse_drag = False):
+        self.text = text
+        self.init_pos = pos
+        self.font = font
+        self.font_size = font_size
+        self.color = color
+        self.mode = None
+        self.create()
+
+    def create(self):
+        pass
+
+    def update(self):
+        pass
+
+    def move_all(self):
+        pass
+
+    def move(self,move_function,letter):
+        pass
+
+    def change_color_all(self,color):
+        self.color = color
+
+    def change_color(self,letter,color):
+        pass
+
+    def enable_mouse_drag(self):
+        pass
+
+    def change_mode(self):
+        """update will have conditionals to handle this"""
+        pass
+
+    def _inerte_mode(self):
+        pass
+
+    def _screen_protector_mode(self):
+        pass
+
+    def _pong_mode(self):
+        pass
+
+    def _choose_letter(self,letter):
+        """Internally used"""
         pass
