@@ -5,6 +5,8 @@ import os
 import sys
 import random
 from teste_yuri import Yuri
+from utils import Text, button
+from math import cos, sin, pi
 
 base_dir = os.path.dirname(os.path.abspath(__file__)) # Get the directory of the current script
 def load_image_from_subfolder(image_name, subfolder="game_thumb"): #fix the error alert
@@ -27,23 +29,27 @@ clock = pygame.time.Clock()
 running = True
 icon_name = pygame.image.load('icon_name.jfif').convert()   
 pygame.display.set_icon(icon_name)  #----> criar icône 
-yuri = Yuri(screen, WIDTH, HEIGHT)
 ##UNIVERSAL_VAR-------------------------------------------------
 #print(pygame.font.get_fonts()) see fonts
 menu_font = pygame.font.SysFont('z003', 70)    #----->fazer função cria texto
 game_list_font = pygame.font.SysFont('Tahoma', 40)
 random_game_font = pygame.font.SysFont('Tahoma', 30)
-background = load_image_from_subfolder('background_main_menu.png',subfolder= "general_images")
-background = pygame.transform.smoothscale(background, screen.get_size())
+background = (50,50,50)
+TITLE = 'OGYGIA'
 stages_list = [0,1,2]
 estagio = 0
 players = -1
 hue = 0 
 run= 0 
+balls = False
 #vars for game_menu # Scroll variables
 scroll_offset = 0
 scroll_limit = (srfc_height) - 720 
 scroll_speed = 20
+##Main_objects
+yuri = Yuri(screen, WIDTH, HEIGHT)
+title = Text(TITLE,(WIDTH//2,HEIGHT//2),'Arial',200,(240,240,240))
+balls_b = button(20,20,(50,50),(125,125,0),0,45,'BALLS',font_size=10,text_color=(0,25,183))
 ##BASE_FUNCTIONS---------------------------------------------
 def stage(estagio):
     match estagio:
@@ -58,18 +64,20 @@ def stage(estagio):
 
         case False :
             pass
- 
-
 ##menu-----------------------------------------
 def menu_screen(color):    #---------De preferência ransformar num objeto, dentro de stage
     texto_menu = menu_font.render('PRESS SPACE', True, color)
-    screen.blit(background, (0, 0))  #screen.blit(background_main_menu, (0, 0))
+    screen.fill(background)  #screen.blit(background_main_menu, (0, 0)) if image
+    title.update(screen)
     return texto_menu.get_rect(center=(screen.get_width()//2, screen.get_height()*(7/8))) , texto_menu  # Center the text on the screen
 
 def changeColor(hue):
         color = colorsys.hsv_to_rgb(hue,1,1)
         return (color[0]*255,color[1]*255,color[2]*255)
 
+def change_balls():
+    global balls
+    balls = not balls
 ##game_menu-----------------------------------------
 
 def game_menu_screen(game_list, pos_list,icon_size,run):  #exclude unused vars
@@ -93,6 +101,7 @@ def game_menu_screen(game_list, pos_list,icon_size,run):  #exclude unused vars
     screen.blit(_text, (10, 5 - scroll_offset))
     run = 1  #Mounting rects occours once
 ##--------------------------------------------------------------------
+title.start_typewriter(delay=400) #runs once
 while running:
     # poll for events
     # pygame.QUIT event means the user clicked X to close your window
@@ -103,6 +112,20 @@ while running:
         elif event.type == pygame.KEYDOWN and stage(estagio) == "menu":  #usar pygame.key.get_pressed()
             if event.key == pygame.K_SPACE:    
                 estagio = 1
+
+            elif event.key == pygame.K_d:
+                title.enable_mouse_drag()
+
+            elif event.key == pygame.K_BACKSPACE:
+                title.create()
+
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            title.change_color_all((random.randint(0,255), random.randint(0,255), random.randint(0,255)))
+            if balls_b.obj.collidepoint(event.pos[0],event.pos[1]):
+                change_balls()
+            
+        if title.mouse_drag == True:
+            title.handle_mouse_event(event)
 
         # Controle da rolagem usando as setas para cima e para baixo  ##not working ----> need to fix
         elif stage(estagio) == "game_menu":
@@ -128,6 +151,7 @@ while running:
                     elif pygame.Rect(790, 5 - scroll_offset , 165, 50).collidepoint(pygame.mouse.get_pos()): #random button collision 
                         game = random.choice(game_list)
                         estagio = 2
+                        
     
     stage(estagio)
     
@@ -139,7 +163,9 @@ while running:
         hue += 0.005
         cor = changeColor(hue)
         start_rect, press_start = menu_screen(cor)  
-        yuri.run(clock)
+        if balls: yuri.run(clock)
+        #balls_b.move((WIDTH*hue,100*cos(hue*2*pi)))
+        balls_b.update(screen,True)
         screen.blit(press_start, start_rect)
 
     if stage(estagio) == "game_menu": 
