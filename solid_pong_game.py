@@ -2,6 +2,7 @@ import pygame
 
 # Initialize Pygame
 pygame.init()
+clock = pygame.time.Clock()
 
 # Screen dimensions
 width = 800
@@ -180,7 +181,6 @@ while running:
             screen.blit(text, text_rect)
             screen.blit(text_ln_2, text_ln_2_rect)
             pygame.display.flip()
-            clock = pygame.time.Clock()
             clock.tick(20)
 
 pygame.quit()
