@@ -17,11 +17,18 @@ def load_image_from_subfolder(image_name, subfolder="game_thumb"): #fix the erro
     else:
         raise FileNotFoundError(f"Image not found: {image_path}")
     
+def get_proportion():
+    global WIDTH
+    global HEIGHT
+    size = pygame.display.get_window_size()
+    proportion = size / (WIDTH, HEIGHT)
+    return proportion
 
 ##PYGAME_SETUP---------------------------------------------
 WIDTH, HEIGHT = 1280, 720 
 pygame.init()
-screen = pygame.display.set_mode((WIDTH, HEIGHT))
+screen = pygame.display.set_mode((WIDTH, HEIGHT), pygame.RESIZABLE)
+SC_SURFACE = pygame.Surface((WIDTH, HEIGHT))   #TODO: make a master surface who resizes everything!!!
 game_menu_surface = pygame.Surface((WIDTH, srfc_height)) ###excell is calculated in game_menu.py
 #running and windw sets
 pygame.display.set_caption('PONG')
@@ -31,7 +38,7 @@ icon_name = pygame.image.load('icon_name.jfif').convert()
 pygame.display.set_icon(icon_name)  #----> criar icône 
 ##UNIVERSAL_VAR-------------------------------------------------
 #print(pygame.font.get_fonts()) see fonts
-menu_font = pygame.font.SysFont('z003', 70)    #----->fazer função cria texto
+menu_font = pygame.font.SysFont('z003', 70)    
 game_list_font = pygame.font.SysFont('Tahoma', 40)
 random_game_font = pygame.font.SysFont('Tahoma', 30)
 background = (50,50,50)
