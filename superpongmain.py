@@ -24,39 +24,69 @@ def get_proportion():
     proportion = size / (WIDTH, HEIGHT)
     return proportion
 
-##PYGAME_SETUP---------------------------------------------
-WIDTH, HEIGHT = 1280, 720 
-pygame.init()
-screen = pygame.display.set_mode((WIDTH, HEIGHT), pygame.RESIZABLE)
-SC_SURFACE = pygame.Surface((WIDTH, HEIGHT))   #TODO: make a master surface who resizes everything!!!
-game_menu_surface = pygame.Surface((WIDTH, srfc_height)) ###excell is calculated in game_menu.py
-#running and windw sets
-pygame.display.set_caption('PONG')
-clock = pygame.time.Clock()
-running = True
-icon_name = pygame.image.load('icon_name.jfif').convert()   
-pygame.display.set_icon(icon_name)  #----> criar icône 
-##UNIVERSAL_VAR-------------------------------------------------
-#print(pygame.font.get_fonts()) see fonts
-menu_font = pygame.font.SysFont('z003', 70)    
-game_list_font = pygame.font.SysFont('Tahoma', 40)
-random_game_font = pygame.font.SysFont('Tahoma', 30)
-background = (50,50,50)
+def map_mouse_to_surface():
+    """
+    Translates the window's mouse position to the SC_SURFACE's coordinates.
+    This is the KEY to making interactions work on a scaled surface.
+    """
+    mouse_x, mouse_y = pygame.mouse.get_pos()
+    window_width, window_height = screen.get_size()
+    
+    scale_x = window_width / WIDTH
+    scale_y = window_height / HEIGHT
+    scale = min(scale_x, scale_y) # Use the smaller scale factor to maintain aspect ratio
+
+    # Calculate the position of the scaled surface on the window
+    scaled_width = WIDTH * scale
+    scaled_height = HEIGHT * scale
+    offset_x = (window_width - scaled_width) / 2
+    offset_y = (window_height - scaled_height) / 2
+    
+    # Reverse the calculation to find the mouse position on the virtual surface
+    if scale == 0: return None
+    surface_x = (mouse_x - offset_x) / scale
+    surface_y = (mouse_y - offset_y) / scale
+
+    # Make sure the mapped coordinates are within the virtual screen bounds
+    if 0 <= surface_x < WIDTH and 0 <= surface_y < HEIGHT:
+        return int(surface_x), int(surface_y)
+    return None
+
+## MAIN_GLOBALS
 TITLE = 'OGYGIA'
+WIDTH, HEIGHT = 1280, 720 
+background = (50,50,50)
 stages_list = [0,1,2]
 estagio = 0
 players = -1
 hue = 0 
 run= 0 
 balls = False
-#vars for game_menu # Scroll variables
+running = True
+
+# Scroll variables
 scroll_offset = 0
-scroll_limit = (srfc_height) - 720 
 scroll_speed = 20
+scroll_limit = (srfc_height) - HEIGHT
+
+##PYGAME_SETUP---------------------------------------------
+pygame.init()
+clock = pygame.time.Clock()
+pygame.display.set_caption(TITLE)
+
+# windw sets
+screen = pygame.display.set_mode((WIDTH, HEIGHT), pygame.RESIZABLE)
+SC_SURFACE = pygame.Surface((WIDTH, HEIGHT))   #TODO: make a master surface who resizes everything!!!
+icon_name = pygame.image.load('icon_name.jfif').convert()   
+menu_font = pygame.font.SysFont('z003', 70)    
+game_list_font = pygame.font.SysFont('Tahoma', 40)
+random_game_font = pygame.font.SysFont('Tahoma', 30)
+
 ##Main_objects
-yuri = Yuri(screen, WIDTH, HEIGHT)
-title = Text(TITLE,(WIDTH//2,HEIGHT//2),'Arial',200,(240,240,240))
+yuri = Yuri(SC_SURFACE, WIDTH, HEIGHT)       # NOTE: change to screen for test SC_SURFACE
+title = Text(TITLE,(WIDTH//2,HEIGHT//2),'p052',200,(240,240,240))
 balls_b = button(20,20,(50,50),(125,125,0),0,45,'BALLS',font_size=10,text_color=(0,25,183))
+
 ##BASE_FUNCTIONS---------------------------------------------
 def stage(estagio):
     match estagio:
@@ -72,71 +102,71 @@ def stage(estagio):
         case False :
             pass
 ##menu-----------------------------------------
-def menu_screen(color):    #---------De preferência ransformar num objeto, dentro de stage
-    texto_menu = menu_font.render('PRESS SPACE', True, color)
-    screen.fill(background)  #screen.blit(background_main_menu, (0, 0)) if image
-    title.update(screen)
-    return texto_menu.get_rect(center=(screen.get_width()//2, screen.get_height()*(7/8))) , texto_menu  # Center the text on the screen
-
 def changeColor(hue):
         color = colorsys.hsv_to_rgb(hue,1,1)
         return (color[0]*255,color[1]*255,color[2]*255)
-
-def change_balls():
-    global balls
-    balls = not balls
 ##game_menu-----------------------------------------
 
 def game_menu_screen(game_list, pos_list,icon_size,run):  #exclude unused vars
+    SC_SURFACE.fill('black')
     if run == 0:
         thb_img = []
         for i, item in enumerate(game_list): 
             recta = pygame.Rect(pos_list[i], icon_size)
-            pygame.draw.rect(game_menu_surface, 'white' ,recta)  ##EMPTY SPOTS FOR GAME IMAGES
+            pygame.draw.rect(SC_SURFACE, 'white' ,recta)  ##EMPTY SPOTS FOR GAME IMAGES
             thb_img.append(load_image_from_subfolder(f'{item}_thumb_image.png'))
-    screen.blit(game_menu_surface, (0, -scroll_offset))
-    #randon button
-    random_rect = pygame.Rect(790 , 5 - scroll_offset, 165, 50)
-    pygame.draw.rect(screen, 'orange' ,random_rect)
-    random_text = random_game_font.render("RANDOM", True, 'black')
-    screen.blit(random_text, (814, 10 - scroll_offset))
-    #Draw images
+    SC_SURFACE.fill('black')
+        
+    # Draw game thumbnails
     for i in range(len(game_list)):
         image_pos = (pos_list[i][0], pos_list[i][1] - scroll_offset)
-        screen.blit(thb_img[i], image_pos) #print the image in the rectangle
-    _text = game_list_font.render("You can Scroll!!", True, 'white')
-    screen.blit(_text, (10, 5 - scroll_offset))
+        # Hover effect
+        rect = pygame.Rect(image_pos, icon_size)
+        if virtual_mouse_pos and rect.collidepoint(virtual_mouse_pos):
+            pygame.draw.rect(SC_SURFACE, 'green', rect.inflate(10, 10), border_radius=5)
+        
+        SC_SURFACE.blit(thb_img[i], image_pos)
+
+    # Draw random button
+    random_rect = pygame.Rect(790, 5 - scroll_offset, 165, 50)
+    # Hover effect
+    if virtual_mouse_pos and random_rect.collidepoint(virtual_mouse_pos):
+            pygame.draw.rect(SC_SURFACE, 'green', random_rect.inflate(10, 10), border_radius=5)
+    pygame.draw.rect(SC_SURFACE, 'orange', random_rect)
+    random_text = random_game_font.render("RANDOM", True, 'black')
+    SC_SURFACE.blit(random_text, random_text.get_rect(center=random_rect.center))
     run = 1  #Mounting rects occours once
 ##--------------------------------------------------------------------
 title.start_typewriter(delay=400) #runs once
 while running:
-    # poll for events
-    # pygame.QUIT event means the user clicked X to close your window
+
+    virtual_mouse_pos = map_mouse_to_surface()
+    
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False        
 
-        elif event.type == pygame.KEYDOWN and stage(estagio) == "menu":  #usar pygame.key.get_pressed()
-            if event.key == pygame.K_SPACE:    
-                estagio = 1
-
-            elif event.key == pygame.K_d:
-                title.enable_mouse_drag()
-
-            elif event.key == pygame.K_BACKSPACE:
-                title.create()
-
-        elif event.type == pygame.MOUSEBUTTONDOWN:
-            title.change_color_all((random.randint(0,255), random.randint(0,255), random.randint(0,255)))
-            if balls_b.obj.collidepoint(event.pos[0],event.pos[1]):
-                change_balls()
+        # --- MENU STAGE EVENTS ---
+        if stage(estagio) == "menu":
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:
+                    estagio = 1
+                elif event.key == pygame.K_d:
+                    title.enable_mouse_drag()
+                elif event.key == pygame.K_BACKSPACE:
+                    title.create()
+                elif event.key == pygame.K_c:
+                    title.change_color_all((random.randint(0,255), random.randint(0,255), random.randint(0,255)))
+                    
+            if event.type == pygame.MOUSEBUTTONDOWN and virtual_mouse_pos:
+                if balls_b.obj.collidepoint(virtual_mouse_pos):
+                    balls = not balls
             
-        if title.mouse_drag == True:
-            title.handle_mouse_event(event)
+            if title.mouse_drag == True:
+                title.handle_mouse_event(event)
 
         # Controle da rolagem usando as setas para cima e para baixo  ##not working ----> need to fix
         elif stage(estagio) == "game_menu":
-            game_menu_surface.fill('black')
             if event.type == pygame.MOUSEWHEEL:
                 if event.y < 0:  # Scroll para baixo
                     scroll_offset = min(scroll_offset + scroll_speed, scroll_limit)
@@ -145,10 +175,10 @@ while running:
 
             for i, item in enumerate(game_list): #green selection
                     if pygame.Rect((pos_list[i][0], pos_list[i][1] - scroll_offset), icon_size).collidepoint(pygame.mouse.get_pos()):
-                        pygame.draw.rect(game_menu_surface, 'green' ,pygame.Rect((pos_list[i][0] - 5 , pos_list[i][1] - 5), (icon_size[0] + 10,icon_size[1] + 10)),border_radius=5)
+                        pygame.draw.rect(SC_SURFACE, 'green' ,pygame.Rect((pos_list[i][0] - 5 , pos_list[i][1] - 5), (icon_size[0] + 10,icon_size[1] + 10)),border_radius=5)
 
             if pygame.Rect(790, 5 - scroll_offset , 165, 50).collidepoint(pygame.mouse.get_pos()): #green selection
-                pygame.draw.rect(game_menu_surface, 'green' ,pygame.Rect((785 , 0 ), (175,60)),border_radius=5)
+                pygame.draw.rect(SC_SURFACE, 'green' ,pygame.Rect((785 , 0 ), (175,60)),border_radius=5)
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 for i, item in enumerate(game_list):
@@ -165,15 +195,18 @@ while running:
     ##CHAMADAS---------------------------------------------
     
     if stage(estagio) == "menu": 
-        if hue > 1:
-            hue = 0
-        hue += 0.005
-        cor = changeColor(hue)
-        start_rect, press_start = menu_screen(cor)  
+        SC_SURFACE.fill(background)
+        hue = (hue + 0.005) % 1
+        color = changeColor(hue)
+        
+        title.update(SC_SURFACE)
         if balls: yuri.run(clock)
-        #balls_b.move((WIDTH*hue,100*cos(hue*2*pi)))
-        balls_b.update(screen,True)
-        screen.blit(press_start, start_rect)
+        balls_b.update(SC_SURFACE, True)
+        
+        texto_menu = menu_font.render('PRESS SPACE', True, color)
+        rect_menu = texto_menu.get_rect(center=(WIDTH // 2, HEIGHT * (7/8)))
+        SC_SURFACE.blit(texto_menu, rect_menu)
+        
 
     if stage(estagio) == "game_menu": 
         game_menu_screen(game_list, pos_list,icon_size, run)
@@ -191,6 +224,16 @@ while running:
         pygame.quit()
         sys.exit()
               
+    window_size = screen.get_size()
+    scale = min(window_size[0] / WIDTH, window_size[1] / HEIGHT)
+    scaled_size = (int(WIDTH * scale), int(HEIGHT * scale))
+    scaled_surface = pygame.transform.smoothscale(SC_SURFACE, scaled_size)
+    
+    # Calculate the centered position
+    pos = ((window_size[0] - scaled_size[0]) // 2, (window_size[1] - scaled_size[1]) // 2)
+
+    screen.fill((0, 0, 0)) # Fill window with black for letterboxing
+    screen.blit(scaled_surface, pos)
 
     pygame.display.flip()
     clock.tick(60) 
