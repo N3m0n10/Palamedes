@@ -11,11 +11,11 @@ WIDTH, HEIGHT = 1280, 720
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 
 numbers = ['1','2','3','4','5','6','7','8','9']
-rect_size = 100
+rect_size = 50
 button = pygame.Rect(650, 10, 50, 50)
 
 font_size = 50
-font = pygame.font.SysFont('Arial', font_size) 
+font = pygame.font.SysFont('Arial', font_size, bold=True) 
 num_texts = []
 for i in range(len(numbers)):
     text_surf = font.render(numbers[i], True, (255, 255, 255)) 
@@ -37,12 +37,12 @@ while running:
 
         for i in range(len(numbers)):
             while True:
-                x = randint(0, WIDTH - 50)
-                y = randint(0, HEIGHT - 50)
-                new_rect = pygame.Rect(x, y, 50, 50)
+                x = randint(0, WIDTH - rect_size)
+                y = randint(0, HEIGHT - rect_size)
+                new_rect = pygame.Rect(x, y, rect_size, rect_size)
 
                 if not any(new_rect.colliderect(r) for r in rects) or new_rect.colliderect(button):
-                    num_texts[i][0].topleft = (x, y)
+                    num_texts[i][0].center = new_rect.center
                     break
             rects.append(new_rect)
 

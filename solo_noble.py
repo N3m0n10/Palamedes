@@ -7,7 +7,7 @@ pygame.display.set_caption('Peg Solitaire')
 general_font = pygame.font.SysFont('Times New Roman', 25)
 win_text = general_font.render("WIN!", True, (90, 100, 240))
 reset_text = general_font.render("RESET", True, "orange")
-move_error_text = general_font.render("Select the piece to move and the piece jumped!", True, "orange")
+move_error_text = general_font.render("Select the piece to move and the piece jumped!", True, 'red')
 
 move_error = False
 initial_positions = []
@@ -72,8 +72,8 @@ button = pygame.rect.Rect(0,0,50,50)
 rects = [] #for mouse hover
 while running:
 
-    screen.fill((30,30,30))
-    pygame.draw.circle(screen, (0, 50, 190), (300, 300), 290) #draw board
+    screen.fill((50,50,50))
+    pygame.draw.circle(screen, (204, 158, 31), (300, 300), 290) #draw board
     
 
     occupied_count = 0
@@ -83,10 +83,10 @@ while running:
                 case ["blocked"]:
                     pass
                 case ["empty"]:
-                    a = pygame.draw.circle(screen, (0, 0, 0), (j * 80 + 60, k * 80 + 60), 15)
+                    a = pygame.draw.circle(screen, (120, 93, 18), (j * 80 + 60, k * 80 + 60), 15)
                     rects.append(a)
                 case ["occupied"]:
-                    b = pygame.draw.circle(screen, "brown", (j * 80 + 60, k * 80 + 60), 16)
+                    b = pygame.draw.circle(screen, (171, 106, 26), (j * 80 + 60, k * 80 + 60), 16)
                     rects.append(b)
                     occupied_count += 1
 
@@ -95,7 +95,7 @@ while running:
     
     for rect in rects:
         if rect.collidepoint(pygame.mouse.get_pos()):
-            pygame.draw.circle(screen, "yellow", rect.center, 17,1)
+            pygame.draw.circle(screen, "blue", rect.center, 17,1)
 ##################################################################events
     for event in pygame.event.get():
         if event.type == pygame.QUIT:

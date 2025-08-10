@@ -1,7 +1,7 @@
 """ One of those games where you haver to grab things that are falling using mouse movement"""
 import pygame
 
-class Colectable(pygame.sprite.Surface):
+class Colectable(pygame.sprite.Sprite):
     def __init__(self,spawm:tuple,speed:tuple):
         super.__init__(spawm)
         self.speed = pygame.math.Vector2(speed)
