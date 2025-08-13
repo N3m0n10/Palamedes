@@ -180,7 +180,7 @@ while running:
             if pygame.Rect(790, 5 - scroll_offset , 165, 50).collidepoint(pygame.mouse.get_pos()): #green selection
                 pygame.draw.rect(SC_SURFACE, 'green' ,pygame.Rect((785 , 0 ), (175,60)),border_radius=5)
 
-            if event.type == pygame.MOUSEBUTTONDOWN:
+            if pygame.mouse.get_pressed()[0]:  # Left mouse button clicked
                 for i, item in enumerate(game_list):
                     if pygame.Rect((pos_list[i][0], pos_list[i][1] - scroll_offset), icon_size).collidepoint(pygame.mouse.get_pos()):# NOTE:triggering on scroll --> FIX
                         game = game_list[i]
