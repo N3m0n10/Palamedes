@@ -20,7 +20,6 @@
   The  classic!
 ![Captura de tela 2025-02-04 205420](https://github.com/user-attachments/assets/abcc1631-42ef-44e6-9aa3-44b2e1d42e6c)
 #### CIRCLE PONG
-![Captura de tela 2025-02-04 205554](https://github.com/user-attachments/assets/fb6ded17-6ce3-4037-ac68-27338bfd2327)
 #### BRICK (*breakout*)
   Breakout styled game, given the stage structuring it's easy to modifiable. Planned routes of **stages made by AI** and normal. More than 10 powe-ups planned!
   *Map creator will be added soon!!*
