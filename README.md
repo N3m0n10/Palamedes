@@ -1,4 +1,4 @@
-# *OGYGIA* is a multi games plataform made with PYTHON and GO
+# *PALAMEDES* is a multi games plataform made with PYTHON and GO
 
 ### FEATURING
 
