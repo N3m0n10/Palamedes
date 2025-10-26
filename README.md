@@ -24,7 +24,7 @@
   Breakout styled game, given the stage structuring it's easy to modifiable. Planned routes of **stages made by AI** and normal. More than 10 powe-ups planned!
   *Map creator will be added soon!!*
   
-![Breakout-60](https://github.com/user-attachments/assets/f9ea8446-4b19-4e56-b29c-dc6d1e2e2d26)
+![palamades](https://github.com/user-attachments/assets/4a1f8e0b-ca41-4a0d-9b23-6c4130eac38c)
 #### SHOGU
   Japanese board game! Consists in pushing opponent pieces out of the board! 
   
