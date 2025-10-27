@@ -32,34 +32,17 @@ def move_piece(fst,scd):
     fst_x, fst_y = (fst[0]-44)//80, (fst[1]-44)//80
     scd_x, scd_y = (scd[0]-44)//80 , (scd[1]-44)//80
     if positions[scd_x][scd_y] or positions[fst_x][fst_y] != ["empty"]:
-        if (fst_x == scd_x) and (fst_y == (scd_y + 1)):
-            if scd_y  > 0:
-                if positions[scd_x][scd_y-1] == ["empty"]:
-                    positions[fst_x][fst_y] = ["empty"]
-                    positions[scd_x][scd_y] = ["empty"]
-                    positions[scd_x][scd_y-1] = ["occupied"]
-                else: move_error = True
-        elif (fst_x == scd_x) and (fst_y == (scd_y - 1)):
-            if scd_y  < 6:
-                if positions[scd_x][scd_y+1] == ["empty"]:
-                    positions[fst_x][fst_y] = ["empty"]
-                    positions[scd_x][scd_y] = ["empty"]
-                    positions[scd_x][scd_y+1] = ["occupied"]
-                else: move_error = True
-        elif (fst_x == (scd_x + 1)) and (fst_y == scd_y):
-            if scd_x > 0:
-                if positions[scd_x-1][scd_y] == ["empty"]:
-                    positions[fst_x][fst_y] = ["empty"]
-                    positions[scd_x][scd_y] = ["empty"]
-                    positions[scd_x-1][scd_y] = ["occupied"]
-                else: move_error = True
-        elif (fst_x == (scd_x - 1)) and (fst_y == scd_y):
-            if scd_x <6:
-                if positions[scd_x+1][scd_y] == ["empty"]:
-                    positions[fst_x][fst_y] = ["empty"]
-                    positions[scd_x][scd_y] = ["empty"]
-                    positions[scd_x+1][scd_y] = ["occupied"]
-                else: move_error = True
+        try:
+            (new_x, new_y) = 2*scd_x - fst_x, 2*scd_y - fst_y
+            if positions[new_x][new_y] == ["occupied"]:
+                move_error = True
+            else:
+                positions[fst_x][fst_y] = ["empty"]
+                positions[scd_x][scd_y] = ["empty"]
+                positions[new_x][new_y] = ["occupied"]
+                move_error = False
+        except IndexError:
+            move_error = True
     selected_piece = None
     second_selected_piece = None
 
@@ -67,7 +50,7 @@ clock = pygame.time.Clock()
 running = True
 selected_piece = None
 second_selected_piece = None
-button = pygame.rect.Rect(0,0,50,50)
+button = pygame.rect.Rect(0,0,50,45)
     
 rects = [] #for mouse hover
 while running:
@@ -119,7 +102,7 @@ while running:
 ##################################################################events
 
     
-    pygame.draw.circle(screen, "orange", button.center, 15)
+    pygame.draw.circle(screen, "orange", button.center, 10)
     screen.blit(reset_text, (45,10))
     if selected_piece is not None:
         pygame.draw.circle(screen, "green", selected_piece.center, 17,1)

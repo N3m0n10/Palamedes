@@ -7,9 +7,10 @@ import random
 from teste_yuri import Yuri
 from utils import Text, button
 from math import cos, sin, pi
+from z import Galaxy
 
 base_dir = os.path.dirname(os.path.abspath(__file__)) # Get the directory of the current script
-def load_image_from_subfolder(image_name, subfolder="game_thumb"): #fix the error alert
+def load_image_from_subfolder(image_name, subfolder="game_thumb"):
     # Build the full path to the image based on the base_dir
     image_path = os.path.join(base_dir, "assets", subfolder, image_name)
     if os.path.exists(image_path):
@@ -53,7 +54,7 @@ def map_mouse_to_surface():
     return None
 
 ## MAIN_GLOBALS
-TITLE = 'OGYGIA'
+TITLE = 'PALAMEDES'
 WIDTH, HEIGHT = 1280, 720 
 background = (50,50,50)
 stages_list = [0,1,2]
@@ -84,8 +85,9 @@ random_game_font = pygame.font.SysFont('Tahoma', 30)
 
 ##Main_objects
 yuri = Yuri(SC_SURFACE, WIDTH, HEIGHT)       # NOTE: change to screen for test SC_SURFACE
+galac = Galaxy(SC_SURFACE)
 title = Text(TITLE,(WIDTH//2,HEIGHT//2),'p052',200,(240,240,240))
-balls_b = button(20,20,(50,50),(125,125,0),0,45,'BALLS',font_size=10,text_color=(0,25,183))
+balls_b = button(20,20,(50,50),(80,125,50),0,45,'BALLS',font_size=10,text_color=(0,25,183))
 
 ##BASE_FUNCTIONS---------------------------------------------
 def stage(estagio):
@@ -202,6 +204,9 @@ while running:
         title.update(SC_SURFACE)
         if balls: yuri.run(clock)
         balls_b.update(SC_SURFACE, True)
+
+        #test
+        #galac.run()
         
         texto_menu = menu_font.render('PRESS SPACE', True, color)
         rect_menu = texto_menu.get_rect(center=(WIDTH // 2, HEIGHT * (7/8)))

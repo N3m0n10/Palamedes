@@ -28,6 +28,7 @@
 ![Breakout-60](https://github.com/user-attachments/assets/f9ea8446-4b19-4e56-b29c-dc6d1e2e2d26)
 #### SHOGU
   Japanese board game! Consists in pushing opponent pieces out of the board! 
+  *External repo for bot implemantions:* *link soon*
   
 ![shougu](https://github.com/user-attachments/assets/6984858f-dcee-421a-9ab0-44d7e276b81b)
 

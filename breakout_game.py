@@ -615,13 +615,18 @@ while running:
         if unbreak_toker > 0:
             unbreak_toker -= 1
         
-
+        # PLAYER COLLISION AND ATUALIZATION
         for iball in ball_list:
             if pygame.Rect.colliderect(iball.rect, player1.rect) and touch_token == 0:
+                
+                paddle_half = max(1, player1.rect.width / 2)
+                relative = (iball.rect.centerx - player1.rect.centerx) / paddle_half
+                relative = max(-1.0, min(1.0, relative))
+
                 iball.ball_vel_y *= -1 
-                iball.ball_vel_x -= (last_player_pos-player1.player_pos.x)*0.5
+                iball.ball_vel_x = relative * 5
                 touch_token = 15
-            iball.atualize(0.02, (WIDTH, HEIGHT))
+            iball.atualize(0.01, (WIDTH, HEIGHT))
 
         
         ##atualizations
