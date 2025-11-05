@@ -11,29 +11,34 @@
 
 ### STRUCTURE
   A main python script handle the **multiple games selection**, making it easy for expanding:
-![Captura de tela 2025-02-04 205309](https://github.com/user-attachments/assets/76a0bcc3-7a48-4869-9620-1c9a6b9af5b5)
+  
+  ![sem título](https://github.com/user-attachments/assets/dda330df-0d84-4c1a-b8ab-191adf258ff6)
 
   Images, sounds and other data are stored at **assets** folder. 
 
 ## **GAMES**
 #### PONG
   The  classic!
-![Captura de tela 2025-02-04 205420](https://github.com/user-attachments/assets/abcc1631-42ef-44e6-9aa3-44b2e1d42e6c)
+  
+![pong](https://github.com/user-attachments/assets/526c0705-300c-4e4f-8837-071da7f3e016)
+
 #### CIRCLE PONG
 #### BRICK (*breakout*)
   Breakout styled game, given the stage structuring it's easy to modifiable. Planned routes of **stages made by AI** and normal. More than 10 powe-ups planned!
   *Map creator will be added soon!!*
   
-![palamades](https://github.com/user-attachments/assets/4a1f8e0b-ca41-4a0d-9b23-6c4130eac38c)
+![items_dreakout](https://github.com/user-attachments/assets/7b5ec16a-0e73-42a5-84bb-208334fa0a7f)
+
+
 #### SHOGU
   Japanese board game! Consists in pushing opponent pieces out of the board! 
   *External repo for bot implemantions:* *link soon*
   
-![shougu](https://github.com/user-attachments/assets/6984858f-dcee-421a-9ab0-44d7e276b81b)
+![shogu](https://github.com/user-attachments/assets/ca682cd0-1663-4d18-9c62-490f8fe66acc)
 
 #### PEG-SOLITARIE (SOLO-NOBLE)
   A puzzle from the XV century! 
   
-![Captura de tela 2025-02-28 111117](https://github.com/user-attachments/assets/77469d7c-d7ab-454e-b18f-c2a7eda5f2c8)![Captura de tela 2025-02-28 111141](https://github.com/user-attachments/assets/27ef6465-74ac-4d4c-b195-336d3a64ce0b)
+  ![peg_solitarie](https://github.com/user-attachments/assets/863a6fb5-b683-4382-92b9-1b0b50a4e561)
 
-TODO list[📝](TODO.md)
+[objectives](TODO.md)
