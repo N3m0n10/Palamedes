@@ -8,6 +8,32 @@ from teste_yuri import Yuri
 from utils import Text, button
 from math import cos, sin, pi
 from z import Galaxy
+import numpy as np
+
+_noise_cache_surf = None
+_last_noise_ms = 0
+_noise_interval_ms = 80  # atualiza noise a cada 80ms (ajuste conforme necessário)
+_noise_small_scale = 4   # quão menor será o noise (1 = full size; 4 = WIDTH/4 x HEIGHT/4)
+_scanlines_surf = None
+
+def make_noise_surface(intensity=30):
+    """Gera (rápido) uma surface de ruído pequena e escala para o tamanho full.
+    Usa numpy.random apenas para a pequena textura. Retorna uma Surface pronta para blit com BLEND_RGB_ADD.
+    """
+    w_small = max(2, WIDTH // _noise_small_scale)
+    h_small = max(2, HEIGHT // _noise_small_scale)
+    arr = np.random.randint(0, intensity, (w_small, h_small, 3), dtype=np.uint8)  # (width,height,3) OK para surfarray
+    surf_small = pygame.surfarray.make_surface(arr)
+    surf = pygame.transform.smoothscale(surf_small, (WIDTH, HEIGHT))
+    return surf
+
+def make_scanlines_surface(spacing=3, alpha=80):
+    """Gera uma surface com linhas sem reaprender a cada frame."""
+    surf = pygame.Surface((WIDTH, HEIGHT), flags=pygame.SRCALPHA)
+    col = (0, 0, 0, alpha)
+    for y in range(0, HEIGHT, spacing):
+        pygame.draw.line(surf, col, (0, y), (WIDTH, y))
+    return surf
 
 base_dir = os.path.dirname(os.path.abspath(__file__)) # Get the directory of the current script
 def load_image_from_subfolder(image_name, subfolder="game_thumb"):
@@ -139,7 +165,14 @@ def game_menu_screen(game_list, pos_list,icon_size,run):  #exclude unused vars
     SC_SURFACE.blit(random_text, random_text.get_rect(center=random_rect.center))
     run = 1  #Mounting rects occours once
 ##--------------------------------------------------------------------
-title.start_typewriter(delay=400) #runs once
+title.start_typewriter(delay=400) #runs once ---> envelop start
+
+##main-screen-random-selector
+static = False
+if np.random.rand() < 0.3:
+    static = True
+    scan_lines = True
+
 while running:
 
     virtual_mouse_pos = map_mouse_to_surface()
@@ -159,6 +192,10 @@ while running:
                     title.create()
                 elif event.key == pygame.K_c:
                     title.change_color_all((random.randint(0,255), random.randint(0,255), random.randint(0,255)))
+                elif event.key == pygame.K_t:
+                    title.start_typewriter(delay=200)
+                elif event.key == pygame.K_s:
+                    static = not static
                     
             if event.type == pygame.MOUSEBUTTONDOWN and virtual_mouse_pos:
                 if balls_b.obj.collidepoint(virtual_mouse_pos):
@@ -169,7 +206,10 @@ while running:
 
         # Controle da rolagem usando as setas para cima e para baixo  ##not working ----> need to fix
         elif stage(estagio) == "game_menu":
-            if event.type == pygame.MOUSEWHEEL:
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_BACKSPACE:
+                    estagio = 0
+            elif event.type == pygame.MOUSEWHEEL:
                 if event.y < 0:  # Scroll para baixo
                     scroll_offset = min(scroll_offset + scroll_speed, scroll_limit)
                 elif event.y > 0:  # Scroll para cima
@@ -204,17 +244,23 @@ while running:
         title.update(SC_SURFACE)
         if balls: yuri.run(clock)
         balls_b.update(SC_SURFACE, True)
-
-        #test
-        #galac.run()
         
         texto_menu = menu_font.render('PRESS SPACE', True, color)
         rect_menu = texto_menu.get_rect(center=(WIDTH // 2, HEIGHT * (7/8)))
-        SC_SURFACE.blit(texto_menu, rect_menu)
-        
+
+        #test
+        #galac.run()
+
+        SC_SURFACE.blit(texto_menu, rect_menu)      
 
     if stage(estagio) == "game_menu": 
         game_menu_screen(game_list, pos_list,icon_size, run)
+
+        if static:
+            # secret game ^-^
+            # analog horror + puzzle game idea
+            pass
+
         pygame.display.flip()
 
     if stage(estagio) == "fase": #will be renamed and triggered by game_menu
@@ -228,7 +274,23 @@ while running:
             #raise FileNotFoundError("Game not found")     
         pygame.quit()
         sys.exit()
-              
+
+
+    now = pygame.time.get_ticks()
+    if static:
+        # atualizar cache de noise em baixa frequência
+        if _noise_cache_surf is None or now - _last_noise_ms > _noise_interval_ms:
+            _noise_cache_surf = make_noise_surface(intensity=10)
+            _last_noise_ms = now
+        # criar scanlines uma vez (ajuste spacing/alpha conforme quiser)
+        if _scanlines_surf is None:
+            _scanlines_surf = make_scanlines_surface(spacing=3, alpha=80)
+
+        # aplica ruído por adição (mais rápido que manipular pixels do surface principal)
+        SC_SURFACE.blit(_noise_cache_surf, (0, 0), special_flags=pygame.BLEND_RGB_ADD)
+        SC_SURFACE.blit(_scanlines_surf, (0, 0))       
+
+    ## scale surface
     window_size = screen.get_size()
     scale = min(window_size[0] / WIDTH, window_size[1] / HEIGHT)
     scaled_size = (int(WIDTH * scale), int(HEIGHT * scale))
@@ -239,7 +301,7 @@ while running:
 
     screen.fill((0, 0, 0)) # Fill window with black for letterboxing
     screen.blit(scaled_surface, pos)
-
+ 
     pygame.display.flip()
     clock.tick(60) 
     

@@ -123,7 +123,7 @@ player_size = 150
 player_half_size = player_size/2
 player1 = player(screen, 'cyan' , player_size, 10 , 585,1,"rect","horizontal",posit_y = 600)
 ball_list = []
-leaderboard_button = pygame.Rect(790, 5 , 165, 50) ##for collision detection
+leaderboard_button = pygame.Rect(20, 5 , 165, 50) ##for collision detection
 life = 3
 need_build = 1
 points = 0
