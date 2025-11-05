@@ -16,6 +16,32 @@ _noise_interval_ms = 80  # atualiza noise a cada 80ms (ajuste conforme necessár
 _noise_small_scale = 4   # quão menor será o noise (1 = full size; 4 = WIDTH/4 x HEIGHT/4)
 _scanlines_surf = None
 
+def water_wave(surface, time, amplitude=2, wavelength=16, speed=3):
+    w, h = surface.get_size()
+    distorted = pygame.Surface((w, h))
+    for y in range(h):
+        offset = int(np.sin((y / wavelength) + (time * speed)) * amplitude)
+        line = surface.subsurface(pygame.Rect(0, y, w, 1))
+        distorted.blit(line, (offset, y))
+    return distorted
+
+def water_effect(surface, time):
+    # Distorção
+    distorted = water_wave(surface, time, amplitude=4, wavelength=20, speed=2)
+
+    # Camada azul translúcida
+    blue_overlay = pygame.Surface(surface.get_size(), pygame.SRCALPHA)
+    blue_overlay.fill((0, 60, 150, 30))  # RGBA (transparente)
+    distorted.blit(blue_overlay, (0, 0), special_flags=pygame.BLEND_RGBA_ADD)
+
+    # Brilho dinâmico
+    brightness = (np.sin(time * 0.3) + 1) * 20
+    glow = pygame.Surface(surface.get_size(), pygame.SRCALPHA)
+    glow.fill((brightness, brightness, brightness, 30))
+    distorted.blit(glow, (0, 0), special_flags=pygame.BLEND_RGBA_ADD)
+
+    return distorted
+
 def make_noise_surface(intensity=30):
     """Gera (rápido) uma surface de ruído pequena e escala para o tamanho full.
     Usa numpy.random apenas para a pequena textura. Retorna uma Surface pronta para blit com BLEND_RGB_ADD.
@@ -167,11 +193,15 @@ def game_menu_screen(game_list, pos_list,icon_size,run):  #exclude unused vars
 ##--------------------------------------------------------------------
 title.start_typewriter(delay=400) #runs once ---> envelop start
 
+# TODO: this is provisory, make a pool for effects with probabilities + special conditions
 ##main-screen-random-selector
 static = False
+water = False
 if np.random.rand() < 0.3:
     static = True
     scan_lines = True
+if np.random.rand() < 0.3:
+    water = True
 
 while running:
 
@@ -288,7 +318,10 @@ while running:
 
         # aplica ruído por adição (mais rápido que manipular pixels do surface principal)
         SC_SURFACE.blit(_noise_cache_surf, (0, 0), special_flags=pygame.BLEND_RGB_ADD)
-        SC_SURFACE.blit(_scanlines_surf, (0, 0))       
+        SC_SURFACE.blit(_scanlines_surf, (0, 0))      
+
+    if water:
+        SC_SURFACE.blit(water_effect(SC_SURFACE, now/1000), (0, 0)) 
 
     ## scale surface
     window_size = screen.get_size()
