@@ -31,10 +31,11 @@
   
 ![items_dreakout](https://github.com/user-attachments/assets/7b5ec16a-0e73-42a5-84bb-208334fa0a7f)
 
-#### SHOGU
+#### SHOGU      ![shogu(2)](https://github.com/user-attachments/assets/1c3ecc0f-87d8-4455-9635-62742e30f182)
   Japanese board game! Consists in pushing opponent pieces out of the board! 
-  *External repo for bot implemantions:* *link soon*
-  
+  *External repo for bot implemantions:* *link soon*  
+
+
 ![shogu](https://github.com/user-attachments/assets/ca682cd0-1663-4d18-9c62-490f8fe66acc)
 
 #### PEG-SOLITARIE (SOLO-NOBLE)
