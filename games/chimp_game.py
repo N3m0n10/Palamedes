@@ -9,6 +9,7 @@ clock = pygame.time.Clock()
 
 WIDTH, HEIGHT = 1280, 720
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
+pygame.display.set_caption("Chimp Game")
 
 numbers = ['1','2','3','4','5','6','7','8','9']
 rect_size = 50

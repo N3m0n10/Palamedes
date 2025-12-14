@@ -6,7 +6,6 @@ import sys
 import random
 from teste_yuri import Yuri
 from utils import Text, button
-from math import cos, sin, pi
 from z import Galaxy
 import numpy as np
 
@@ -27,7 +26,7 @@ def water_wave(surface, time, amplitude=2, wavelength=16, speed=3):
 
 def water_effect(surface, time):
     # Distorção
-    distorted = water_wave(surface, time, amplitude=4, wavelength=20, speed=2)
+    distorted = water_wave(surface, time, amplitude=4, wavelength=30, speed=2)
 
     # Camada azul translúcida
     blue_overlay = pygame.Surface(surface.get_size(), pygame.SRCALPHA)
@@ -297,11 +296,16 @@ while running:
         ruunning = False
         print(game)
         try:
-            with open(f"{game}.py", "r") as file:  #change to import lib ---> change pong for no self imports
+            with open(f"games/{game}.py", "r") as file:  #change to import lib ---> change pong for no self imports
+                pygame.mixer.Sound('assets/sounds/success_sound.wav').play().set_volume(0.5)  #play success sound
                 exec(file.read())  ##"__name__": ""
         except: 
             print('error - game does not exist')
-            #raise FileNotFoundError("Game not found")     
+            #raise FileNotFoundError("Game not found")    
+            ruunning = True
+            estagio = 1
+            pygame.mixer.Sound('assets/sounds/error_sound.wav').play()  #play error sound
+            continue
         pygame.quit()
         sys.exit()
 
