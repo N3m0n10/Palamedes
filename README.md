@@ -38,8 +38,9 @@
 
 ![shogu](https://github.com/user-attachments/assets/ca682cd0-1663-4d18-9c62-490f8fe66acc)
 
-#### PEG-SOLITARIE (SOLO-NOBLE)
+#### PEG-SOLITARIE (SOLO-NOBLE) <img width="25" height="25" alt="solo" src="https://github.com/user-attachments/assets/0534235a-189f-47c0-9803-4f8a32ef8aa6" />
   A puzzle from the XV century! [See the wiki!](https://en.wikipedia.org/wiki/Peg_solitaire)
+
   
   ![peg_solitarie](https://github.com/user-attachments/assets/863a6fb5-b683-4382-92b9-1b0b50a4e561)
 
