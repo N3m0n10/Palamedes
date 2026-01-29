@@ -45,7 +45,8 @@
   ![peg_solitarie](https://github.com/user-attachments/assets/863a6fb5-b683-4382-92b9-1b0b50a4e561)
 
 #### CHIMP 
-  A simple game of image memory, based on the one played by [AYAMU](https://en-wikipedia-org.translate.goog/wiki/Ayumu_(chimpanzee)?_x_tr_sl=en&_x_tr_tl=pt&_x_tr_hl=pt&_x_tr_pto=tc). The original: [game video](https://www.youtube.com/watch?v=JkNV0rSndJ0)
+  A simple game of image memory, based on the one played by [AYAMU](https://en-wikipedia-org.translate.goog/wiki/Ayumu_(chimpanzee)?_x_tr_sl=en&_x_tr_tl=pt&_x_tr_hl=pt&_x_tr_pto=tc). The original: [game video](https://www.youtube.com/watch?v=JkNV0rSndJ0)  
+  You can also play it here: [Chimp-online](https://n3m0n10.github.io/On-web-Ayamu-game/)
 
 ![chimp](https://github.com/user-attachments/assets/bb31b3e0-0a8f-4eb4-a392-64ed30b737df)
 
