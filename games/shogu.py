@@ -11,8 +11,8 @@ points_font = pygame.font.SysFont('Tahoma', 100)
 impossible_move_text = start_font.render("IMPOSSIBLE MOVE", True, "red")
 points = [0,0]
 
-if __name__ == "__main__":  #make online
-    pygame.display.set_icon(pygame.image.load("assets/general_images/Shogu.ico"))
+if __name__ == "__main__":  
+    pygame.display.set_icon(pygame.image.load("assets/general_images/ico/Shogu.ico"))
 
 #######create board 
 #four boards, each one a list at the main list

@@ -670,6 +670,9 @@ while running:
                     del i
                     #collision sucess
 
+            #NOTE: another approuch would be check ball x_pos and correlate to bricks lines, reducing the for loop
+            #Unless atualizing the bricks is needed, for example, in case of brick animation, or more complex behavior
+
             ##power ups effcets
         for j in power_up_cou_list:
             j.atualize()
@@ -704,7 +707,10 @@ while running:
                         ball_list.remove(iball)
                         del iball
                         ball_list = restart_pos(ball_list)   #time of restart may be used for remake of restart function
-                    else:
+                        for j in power_up_cou_list: # delete power ups particles
+                            power_up_cou_list.remove(j)
+                            del j
+                    else:  # more than one ball in play
                         ball_list.remove(iball)
                         del iball
                     _hyperball = False

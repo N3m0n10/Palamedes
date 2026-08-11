@@ -28,7 +28,7 @@ class player():
         ##BOT config --- FOLLOW BALL 
         if player_num == 0:
            
-            if ball_pos_y > self.player_pos.y :
+            if ball_pos_y > self.player_pos.y + self.size_y/2:
                 self.player_pos.y += 900 *dt
             elif ball_pos_y < self.player_pos.y :
                 self.player_pos.y -= 900 *dt

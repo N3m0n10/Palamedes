@@ -160,6 +160,12 @@ while running:
                     current_speed = math.sqrt(ball1.ball_vel_x**2 + ball1.ball_vel_y**2)
                     ball1.ball_vel_x = abs(current_speed * math.cos(bounce_angle))  # Always bounce right
                     ball1.ball_vel_y = -current_speed * math.sin(bounce_angle)
+
+                    if abs(ball1.ball_vel_y) > ball_max_speed_y:
+                        if ball1.ball_vel_y > 0:
+                            ball1.ball_vel_y = ball_max_speed_y
+                        else: 
+                            ball1.ball_vel_y = -ball_max_speed_y
                     
                     # Add paddle velocity influence (dampened)
                     paddle_velocity = (player1.player_pos.y - last_player1_pos) * 0.3
@@ -176,6 +182,12 @@ while running:
                     current_speed = math.sqrt(ball1.ball_vel_x**2 + ball1.ball_vel_y**2)
                     ball1.ball_vel_x = -abs(current_speed * math.cos(bounce_angle))  # Always bounce left
                     ball1.ball_vel_y = -current_speed * math.sin(bounce_angle)
+                    
+                    if abs(ball1.ball_vel_y) > ball_max_speed_y:
+                        if ball1.ball_vel_y > 0:
+                            ball1.ball_vel_y = ball_max_speed_y
+                        else: 
+                            ball1.ball_vel_y = -ball_max_speed_y
                     
                     paddle_velocity = (opponent.player_pos.y - last_opponent_pos) * 0.3
                     ball1.ball_vel_y += paddle_velocity
@@ -194,6 +206,12 @@ while running:
             #guarda a posição anterior, usado na colisão
             last_player1_pos = player1.player_pos.y 
             last_opponent_pos = opponent.player_pos.y
+
+            if ball1.ball_vel_x < 30 and ball1.ball_vel_x > -30:
+                if ball1.ball_vel_x > 0:
+                    ball1.ball_vel_x += 0.00005
+                else:
+                    ball1.ball_vel_x -= 0.00005
 
             # update elements
             pygame.display.update(rect_score_1)

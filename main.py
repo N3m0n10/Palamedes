@@ -15,6 +15,53 @@ _noise_interval_ms = 80  # atualiza noise a cada 80ms (ajuste conforme necessár
 _noise_small_scale = 4   # quão menor será o noise (1 = full size; 4 = WIDTH/4 x HEIGHT/4)
 _scanlines_surf = None
 
+fire_colors = [(0, 0, 0),(32, 0, 0),(32, 0, 0),(64, 0, 0),(64, 0, 0),(96, 0, 0),(96, 0, 0),
+(128, 0, 0),(128, 0, 0),(160, 0, 0),(160, 0, 0),(191, 0, 0),(191, 0, 0),
+(223, 0, 0),(223, 0, 0),(255, 0, 0),(255, 32, 0),(255, 32, 0),(255, 64, 0),
+(255, 64, 0),(255, 96, 0),(255, 96, 0),(255, 128, 0),(255, 128, 0),(255, 160, 0),
+(255, 160, 0),(255, 191, 0),(255, 191, 0),(255, 223, 0),(255, 223, 0),
+(255, 255, 0),(255, 255, 32),(255, 255, 64),(255, 255, 96),(255, 255, 128),
+(255, 255, 160),(255, 255, 255)]
+
+FIRE_WIDTH = 70
+FIRE_HEIGHT = 70
+firePixels = [0] * (FIRE_WIDTH * FIRE_HEIGHT)
+
+def spread_fire(_from):
+    """Spread fire upward with random decay"""
+    rand = random.randint(0, 3)
+    to = _from - FIRE_WIDTH - (rand & 1)
+    
+    # Bounds check
+    if to >= 0 and to < len(firePixels):
+        # Decay: subtract 1-2 from the fire intensity
+        decay = rand >> 1
+        firePixels[to] = max(0, firePixels[_from] - decay)
+
+def doom_fire():
+    """Classic Doom fire algorithm"""    
+    # Spread fire upward
+    for i in range(FIRE_WIDTH):
+        for j in range(1, FIRE_HEIGHT):
+            spread_fire(j * FIRE_WIDTH + i)
+
+def apply_fire_effect():
+    """Apply fire simulation and create a surface from fire pixels (optimized)"""
+    doom_fire()
+    
+    # Use surfarray instead of set_at() - MUCH faster
+    arr = np.zeros((FIRE_WIDTH, FIRE_HEIGHT, 3), dtype=np.uint8)
+    for i in range(FIRE_WIDTH * FIRE_HEIGHT):
+        color = fire_colors[firePixels[i]]
+        arr[i % FIRE_WIDTH, i // FIRE_WIDTH] = color
+    
+    fire_surf = pygame.surfarray.make_surface(arr)
+    
+    # Rescale to screen size
+    scaled_fire = pygame.transform.smoothscale(fire_surf, (WIDTH, HEIGHT))
+    
+    return scaled_fire
+
 def water_wave(surface, time, amplitude=2, wavelength=16, speed=3):
     w, h = surface.get_size()
     distorted = pygame.Surface((w, h))
@@ -115,6 +162,7 @@ hue = 0
 run= 0 
 balls = False
 running = True
+clk = 60
 
 # Scroll variables
 scroll_offset = 0
@@ -129,7 +177,7 @@ pygame.display.set_caption(TITLE)
 # windw sets
 screen = pygame.display.set_mode((WIDTH, HEIGHT), pygame.RESIZABLE)
 SC_SURFACE = pygame.Surface((WIDTH, HEIGHT))   #TODO: make a master surface who resizes everything!!!
-icon_name = pygame.image.load('icon_name.jfif').convert()   
+icon_name = pygame.image.load('assets/general_images/ico/icon_name.jfif').convert()   
 menu_font = pygame.font.SysFont('z003', 70)    
 game_list_font = pygame.font.SysFont('Tahoma', 40)
 random_game_font = pygame.font.SysFont('Tahoma', 30)
@@ -196,11 +244,19 @@ title.start_typewriter(delay=400) #runs once ---> envelop start
 ##main-screen-random-selector
 static = False
 water = False
-if np.random.rand() < 0.3:
+fire = False
+rand = np.random.rand()
+if rand < 0.3:
     static = True
     scan_lines = True
-if np.random.rand() < 0.3:
+if rand > 0.3 and rand < 0.6:
     water = True
+if rand > 0.6 and rand < 1:
+    fire = True
+    # Initialize fire pixels with bottom row on fire
+    for i in range(0,FIRE_WIDTH, 2):
+        firePixels[i + (FIRE_HEIGHT - 1) * FIRE_WIDTH] = len(fire_colors) - 1
+    clk = 30
 
 while running:
 
@@ -327,6 +383,11 @@ while running:
     if water:
         SC_SURFACE.blit(water_effect(SC_SURFACE, now/1000), (0, 0)) 
 
+    if fire:
+        fire_surf = apply_fire_effect()
+        SC_SURFACE.blit(fire_surf, (0, 0), special_flags=pygame.BLEND_RGBA_ADD)
+    
+    
     ## scale surface
     window_size = screen.get_size()
     scale = min(window_size[0] / WIDTH, window_size[1] / HEIGHT)
@@ -340,7 +401,7 @@ while running:
     screen.blit(scaled_surface, pos)
  
     pygame.display.flip()
-    clock.tick(60) 
+    clock.tick(clk) 
     
 pygame.quit()
 sys.exit()

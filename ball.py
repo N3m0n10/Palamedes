@@ -32,7 +32,12 @@ class ball():
         self.player_pos = pygame.Vector2(screen.get_width() / 2, screen.get_height() / 2)
 
         #pra area estar no mesmo lugar do desenho
-        self.rect = pygame.Rect(self.player_pos.x,self.player_pos.y,radius,radius)
+        self.rect = pygame.Rect(
+        self.player_pos.x - self.radius,
+        self.player_pos.y - self.radius,
+        self.radius * 2,
+        self.radius * 2,
+    )
     
     def atualize(self,dt, tela:tuple, restart = False,init_pos = None, ball_should_not_stop = [False,0,0]):
         
@@ -40,8 +45,8 @@ class ball():
         if restart:
             self.player_pos.x = init_pos[0]
             self.player_pos.y = init_pos[1]
-            self.rect.x = self.player_pos.x
-            self.rect.y = self.player_pos.y
+            self.rect.x = self.player_pos.x - self.radius
+            self.rect.y = self.player_pos.y - self.radius
             self.ball_vel_x = 0
             self.ball_vel_y = 0
             pygame.draw.circle(self.screen,self.color, self.player_pos, self.radius)
@@ -71,8 +76,8 @@ class ball():
                 self.collide_border = True
 
             #to utilizando o rect para testar colisao   
-            self.rect.x = self.player_pos.x
-            self.rect.y = self.player_pos.y
+            self.rect.x = self.player_pos.x - self.radius
+            self.rect.y = self.player_pos.y - self.radius
 
             pygame.draw.circle(self.screen,self.color, self.player_pos, self.radius)
             #limite de velocidade da bola

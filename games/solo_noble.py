@@ -4,6 +4,9 @@ import copy
 pygame.init()
 screen = pygame.display.set_mode((600, 600))
 pygame.display.set_caption('Peg Solitaire')
+
+if __name__ == "__main__":  
+    pygame.display.set_icon(pygame.image.load("assets/general_images/ico/solo.ico"))
 general_font = pygame.font.SysFont('Times New Roman', 25)
 win_text = general_font.render("WIN!", True, (90, 100, 240))
 reset_text = general_font.render("RESET", True, "orange")
@@ -51,7 +54,8 @@ running = True
 selected_piece = None
 second_selected_piece = None
 button = pygame.rect.Rect(0,0,50,45)
-    
+
+
 rects = [] #for mouse hover
 while running:
 
@@ -115,4 +119,4 @@ while running:
     clock.tick(60)
     rects = []
 
-pygame.quit()        
+pygame.quit()
